@@ -37,5 +37,7 @@ def add_cors_header(response):
     response.headers["Access-Control-Allow-Origin"] = "*"
     return response
 
-# if __name__ == '__main__':
-#      app.run(port='5002')
+
+if __name__ == '__main__':
+    application.run()
+
