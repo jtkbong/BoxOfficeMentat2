@@ -33,5 +33,8 @@ class Studios(Resource):
         studios_query.set_table("Movies")
         studios_query.set_unique_results(True)
         studios_query.set_return_columns(["Studio"])
+        studios_query.add_aggregate_column(query.AggregateType.COUNT, '*')
+        studios_query.set_max_results(5000)
+        print(studios_query.to_sql_query())
         cursor.execute(studios_query.to_sql_query())
-        return {'studios': [i[0] for i in cursor.fetchall()]}
+        return {'studios': [{'name': i[0], 'count': i[1]} for i in cursor.fetchall()]}

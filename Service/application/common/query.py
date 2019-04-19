@@ -1,4 +1,14 @@
 import uuid
+from enum import Enum
+
+
+class AggregateType(Enum):
+
+    COUNT = 1
+    SUM = 2
+    AVG = 3
+    MIN = 4
+    MAX = 5
 
 
 class Query:
@@ -12,6 +22,7 @@ class Query:
         self.maxResults = Query.DefaultNumResults
         self.uniqueResults = False
         self.columns = []
+        self.aggregateColumns = []
         self.whereClauses = []
         self.subQueries = []
         self.orderByColumns = []
@@ -32,6 +43,12 @@ class Query:
         
     def set_order_by_columns(self, columns):
         self.orderByColumns = columns
+
+    def add_aggregate_column(self, aggregate_type, column):
+        self.aggregateColumns.append({
+            'aggregate_type': aggregate_type,
+            'column': column
+        })
                 
     def set_results_order(self, results_order):
         self.resultsOrder = results_order
@@ -58,7 +75,14 @@ class Query:
             query = query + ",".join(self.columns)
         else:
             query = query + "*"
-            
+
+        if len(self.aggregateColumns) > 0:
+            for aggregate_column in self.aggregateColumns:
+                query = query + "," + ("%s(%s) AS %s" %
+                                       (aggregate_column['aggregate_type'].name,
+                                        aggregate_column['column'],
+                                        aggregate_column['aggregate_type'].name))
+
         query = query + " FROM boxofficementat.%s" % self.table
         
         if len(self.whereClauses) > 0 or len(self.subQueries) > 0:
@@ -78,6 +102,9 @@ class Query:
                 if len(self.whereClauses) > 0:
                     query = query + " AND "
                 query = query + " AND ".join(sub_queries_sql)
+
+        if len(self.aggregateColumns) > 0:
+            query = query + " GROUP BY " + ",".join(self.columns)
 
         if len(self.orderByColumns) > 0:
             query = query + " ORDER BY " + ",".join(self.orderByColumns)
