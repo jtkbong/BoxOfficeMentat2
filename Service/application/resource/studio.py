@@ -35,6 +35,8 @@ class Studios(Resource):
         studios_query.set_return_columns(["Studio"])
         studios_query.add_aggregate_column(query.AggregateType.COUNT, '*')
         studios_query.set_max_results(5000)
+        studios_query.set_order_by_columns([query.AggregateType.COUNT.name])
+        studios_query.set_results_order("DESC")
         print(studios_query.to_sql_query())
         cursor.execute(studios_query.to_sql_query())
         return {'studios': [{'name': i[0], 'count': i[1]} for i in cursor.fetchall()]}
