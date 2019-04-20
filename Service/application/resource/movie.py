@@ -4,6 +4,7 @@ from werkzeug.exceptions import abort
 from application.common import query
 from application.common import condition
 from application.common import sqlhelper
+from datetime import datetime
 
 
 class Movie(Resource):
@@ -41,6 +42,24 @@ class Movies(Resource):
         studio = request.args.get('studio')
         if studio is not None:
             movies_query.add_where_clause(condition.Condition('Studio', '=', studio))
+
+        release_year = request.args.get('releaseYear')
+        if release_year is not None:
+            release_year = int(release_year)
+            movies_query.add_where_clause(
+                condition.Condition('YEAR(ReleasedDate)', '=', release_year))
+
+        release_month = request.args.get('releaseMonth')
+        if release_month is not None:
+            release_month = int(release_month)
+            movies_query.add_where_clause(
+                condition.Condition('MONTH(ReleasedDate)', '=', release_month))
+
+        release_day = request.args.get('releaseDay')
+        if release_day is not None:
+            release_day = int(release_day)
+            movies_query.add_where_clause(
+                condition.Condition('DAY(ReleasedDate)', '=', release_day))
 
         person = request.args.get('person')
         if person is not None:
@@ -100,4 +119,4 @@ def movie_to_json(movie):
         'runTime': movie[7],
         'mpaaRating': movie[8],
         'productionBudget': movie[9]
-        }
+    }
