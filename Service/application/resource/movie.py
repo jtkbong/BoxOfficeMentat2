@@ -37,7 +37,7 @@ class Genres(Resource):
         studios_query.set_return_columns(["Genre"])
         print(studios_query.to_sql_query())
         cursor.execute(studios_query.to_sql_query())
-        return {'genres': list(cursor.fetchall())}
+        return {'genres': [i[0] for i in cursor.fetchall()]}
 
 
 class MpaaRatings(Resource):
@@ -51,7 +51,7 @@ class MpaaRatings(Resource):
         studios_query.set_return_columns(["MpaaRating"])
         print(studios_query.to_sql_query())
         cursor.execute(studios_query.to_sql_query())
-        return {'ratings': list(cursor.fetchall())}
+        return {'ratings': [i[0] for i in cursor.fetchall()]}
 
 
 class Movies(Resource):
