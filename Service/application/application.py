@@ -19,6 +19,9 @@ def create_app():
     api.add_resource(movie.Movie, '/movie/<id>')
     api.add_resource(movie.Movies, '/movies')
 
+    api.add_resource(movie.Genres, '/genres')
+    api.add_resource(movie.MpaaRatings, '/ratings')
+
     api.add_resource(person.Person, '/person/<id>')
     api.add_resource(person.SearchPeople, '/people')
 

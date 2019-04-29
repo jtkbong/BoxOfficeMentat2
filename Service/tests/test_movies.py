@@ -18,6 +18,20 @@ def test_get_non_existent_movie(client):
     assert client.get('/movie/ironman4').status_code == 404
 
 
+def test_get_genres(client):
+    response = client.get('/genres')
+    assert response.status_code == 200
+    genres = json.loads(response.data)['genres']
+    assert len(genres) > 20
+
+
+def test_get_ratings(client):
+    response = client.get('/ratings')
+    assert response.status_code == 200
+    genres = json.loads(response.data)['ratings']
+    assert len(genres) > 5
+
+
 def test_get_movies(client):
     response = client.get('/movies?person=robertdowneyjr&studio=SonyColumbia')
     assert response.status_code == 200

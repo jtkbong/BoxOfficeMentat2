@@ -26,6 +26,34 @@ class Movie(Resource):
         return movie_to_json(movie)
 
 
+class Genres(Resource):
+
+    def get(self):
+        connection = sqlhelper.get_sql_conn()
+        cursor = connection.cursor()
+        studios_query = query.Query()
+        studios_query.set_table("Movies")
+        studios_query.set_unique_results(True)
+        studios_query.set_return_columns(["Genre"])
+        print(studios_query.to_sql_query())
+        cursor.execute(studios_query.to_sql_query())
+        return {'genres': list(cursor.fetchall())}
+
+
+class MpaaRatings(Resource):
+
+    def get(self):
+        connection = sqlhelper.get_sql_conn()
+        cursor = connection.cursor()
+        studios_query = query.Query()
+        studios_query.set_table("Movies")
+        studios_query.set_unique_results(True)
+        studios_query.set_return_columns(["MpaaRating"])
+        print(studios_query.to_sql_query())
+        cursor.execute(studios_query.to_sql_query())
+        return {'ratings': list(cursor.fetchall())}
+
+
 class Movies(Resource):
 
     def get(self):
@@ -42,6 +70,14 @@ class Movies(Resource):
         studio = request.args.get('studio')
         if studio is not None:
             movies_query.add_where_clause(condition.Condition('Studio', '=', studio))
+
+        genre = request.args.get('genre')
+        if genre is not None:
+            movies_query.add_where_clause(condition.Condition('Genre', '=', genre))
+
+        rating = request.args.get('rating')
+        if rating is not None:
+            movies_query.add_where_clause(condition.Condition('MpaaRating', '=', rating))
 
         release_year = request.args.get('releaseYear')
         if release_year is not None:
