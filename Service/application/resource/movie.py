@@ -73,7 +73,7 @@ class Movies(Resource):
 
         genre = request.args.get('genre')
         if genre is not None:
-            movies_query.add_where_clause(condition.Condition('Genre', '=', genre))
+            movies_query.add_where_clause(condition.Condition('Genre', 'LIKE', "%" + genre + "%"))
 
         rating = request.args.get('rating')
         if rating is not None:
