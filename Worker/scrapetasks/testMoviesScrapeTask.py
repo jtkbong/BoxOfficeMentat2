@@ -1,19 +1,15 @@
 from scrapetasks.scrapetask import ScrapeTask
 import csv
+from datetime import datetime
 
 
 class TestMoviesScrapeTask(ScrapeTask):
     
     def scrape(self):
-        columnNames = ["Id", "Name", "Studio", "DomesticGross"]
+        box_office = datetime.today().strftime('%m%d%H%M')
 
         rows = [
-            ['darkknight', 'The Dark Knight', 'WarnerBros.', '533345358'],
-            ['batman3', 'The Dark Knight Rises', 'WarnerBros.', '448139099'],
-            ['wonderwoman', 'Wonder Woman', 'WarnerBros.', '412563408'],
-            ['harrypotter72', 'Harry Potter and the Deathly Hallows Part 2', 'WarnerBros.', '381011219'],
-            ['americansniper', 'American Sniper', 'WarnerBros.', '350126372'],
-            ['batmanreturns', 'Batman Returns', 'WarnerBros.', '162831698']
+            ['testmovie', 'Test Movie', 'WarnerBros.', box_office]
         ]
                 
         outfile = open('WarnerBros.tsv', "w", newline='')
