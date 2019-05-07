@@ -12,7 +12,8 @@ class TestMoviesScrapeTask(ScrapeTask):
             ['batman3', 'The Dark Knight Rises', 'WarnerBros.', '448139099'],
             ['wonderwoman', 'Wonder Woman', 'WarnerBros.', '412563408'],
             ['harrypotter72', 'Harry Potter and the Deathly Hallows Part 2', 'WarnerBros.', '381011219'],
-            ['americansniper', 'American Sniper', 'WarnerBros.', '350126372']
+            ['americansniper', 'American Sniper', 'WarnerBros.', '350126372'],
+            ['batmanreturns', 'Batman Returns', 'WarnerBros.', '162831698']
         ]
                 
         outfile = open('WarnerBros.tsv', "w", newline='')
@@ -20,3 +21,4 @@ class TestMoviesScrapeTask(ScrapeTask):
         writer.writerows(rows)
         
         self.files.append('WarnerBros.tsv')
+        self.scrapeSuccess = True

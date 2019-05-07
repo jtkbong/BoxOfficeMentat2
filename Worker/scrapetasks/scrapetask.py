@@ -20,10 +20,10 @@ class ScrapeTask(ABC):
             self.scrape()
             if self.scrapeSuccess:
                 self.clear_database()
-            if self.clearDatabaseSuccess:
-                self.write_to_db()
-            if self.writeToDbSuccess:
-                self.cleanup()
+                if self.clearDatabaseSuccess:
+                    self.write_to_db()
+                    if self.writeToDbSuccess:
+                        self.cleanup()
         else:
             print("Task was disabled")
     

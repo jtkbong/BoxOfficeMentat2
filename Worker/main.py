@@ -52,13 +52,13 @@ def run():
         'EndDate',
         'Gross',
         'TheaterCount'
-    ], True))
+    ], False))
     rebuild_tables_tasks.append(TestMoviesScrapeTask('TestMovies', [
         'Id',
         'Name',
         'Studio',
         'DomesticGross'
-    ], False))
+    ], True))
 
     for task in rebuild_tables_tasks:
         print('\tExecuting scrape task for table ' + task.tableName + '...', end='')
