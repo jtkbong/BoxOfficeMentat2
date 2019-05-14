@@ -9,7 +9,7 @@ class TestMoviesScrapeTask(ScrapeTask):
         box_office = datetime.today().strftime('%m%d%H%M')
 
         rows = [
-            ['testmovie', 'Test Movie', 'WarnerBros.', box_office]
+            ['testmovie', 'Test Movie', 'BuenaVista', box_office]
         ]
 
         file_name = '/tmp/WarnerBros.tsv'
