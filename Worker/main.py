@@ -14,6 +14,7 @@ class Mode(Enum):
 
 
 def run():
+    read_config()
     print('Starting scraping data from boxofficemojo.com...')
 
     weekly_tasks = list()
@@ -73,6 +74,12 @@ def read_config():
     print(config.sections())
 
 
+def run_as_lambda(event, context):
+    print("Event received: ", event)
+    print("Log stream name: ", context.log_stream_name)
+    print("Log group name: ", context.log_group_name)
+    run()
+
+
 if __name__ == '__main__':
-    read_config()
     run()

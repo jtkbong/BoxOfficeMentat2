@@ -1,3 +1,6 @@
 *.tsv
 
 __pycache__/
+
+package/
+*.zip

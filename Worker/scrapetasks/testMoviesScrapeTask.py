@@ -11,10 +11,11 @@ class TestMoviesScrapeTask(ScrapeTask):
         rows = [
             ['testmovie', 'Test Movie', 'WarnerBros.', box_office]
         ]
-                
-        outfile = open('WarnerBros.tsv', "w", newline='')
+
+        file_name = '/tmp/WarnerBros.tsv'
+        outfile = open(file_name, "w", newline='')
         writer = csv.writer(outfile, delimiter='\t')
         writer.writerows(rows)
         
-        self.files.append('WarnerBros.tsv')
+        self.files.append(file_name)
         self.scrapeSuccess = True
