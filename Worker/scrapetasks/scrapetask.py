@@ -1,13 +1,21 @@
 from abc import ABC, abstractmethod
-from common.sqlwriter import write_rows_to_db_retries, clear_database
+from common.sqlwriter import *
 import os
+from enum import Enum
+
+
+class ExecutionMode(Enum):
+    weeklyUpdate = 1
+    completeRewrite = 2
 
 
 class ScrapeTask(ABC):
     
-    def __init__(self, table_name, table_columns, task_enabled):
+    def __init__(self, table_name, table_columns, write_type, execution_mode, task_enabled):
         self.tableName = table_name
         self.tableColumns = table_columns
+        self.writeType = write_type
+        self.executionMode = execution_mode
         self.enabled = task_enabled
         self.files = []
         self.scrapeSuccess = False
@@ -19,8 +27,13 @@ class ScrapeTask(ABC):
         if self.enabled:
             self.scrape()
             if self.scrapeSuccess:
-                self.clear_database()
-                if self.clearDatabaseSuccess:
+                if self.executionMode is ExecutionMode.completeRewrite:
+                    self.clear_database()
+                    if self.clearDatabaseSuccess:
+                        self.write_to_db()
+                        if self.writeToDbSuccess:
+                            self.cleanup()
+                else:
                     self.write_to_db()
                     if self.writeToDbSuccess:
                         self.cleanup()
@@ -39,7 +52,7 @@ class ScrapeTask(ABC):
         for fileName in self.files:
             file = open(fileName, "r")
             lines = file.readlines()
-            write_rows_to_db_retries(self.tableName, self.tableColumns, lines)
+            write_rows_to_db_retries(self.tableName, self.tableColumns, self.writeType, lines)
         self.writeToDbSuccess = True
         
     def cleanup(self):

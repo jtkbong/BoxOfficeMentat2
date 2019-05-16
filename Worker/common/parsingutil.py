@@ -2,7 +2,10 @@ import datetime
 
 
 def dollar_text_to_int(text):
-    return float(text.strip('$').replace(',', '').replace(' ', '').replace('(Estimate)', ''))
+    try:
+        return float(text.strip('$').replace(',', '').replace(' ', '').replace('(Estimate)', ''))
+    except ValueError:
+        return 0
 
 
 def text_to_release_date(text):
@@ -27,7 +30,7 @@ def text_to_minutes(text):
 
 def production_budget_to_int(text):
     if text == 'N/A':
-        return None
+        return 0
     return dollar_text_to_int(text.replace('million', '000000'))
 
 
@@ -35,6 +38,12 @@ def get_id_from_url(url):
     if url is None or 'id=' not in url:
         return None
     return url[url.index('id=') + 3: url.index('.htm')]
+
+
+def get_studio_from_url(url):
+    if url is None or 'studio=' not in url:
+        return None
+    return url[url.index('studio=') + 7: url.index('.htm')]
 
 
 def text_to_int(s):

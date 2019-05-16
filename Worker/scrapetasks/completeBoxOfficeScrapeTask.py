@@ -10,14 +10,14 @@ import csv
 from retrying import retry
 
 
-class BoxOfficeScrapeTask(ScrapeTask):
+class CompleteBoxOfficeScrapeTask(ScrapeTask):
 
     MAX_RETRIES = 5
 
     def scrape(self):
         movies = self.get_movie_list()
         for studio, movies in movies.items():
-            file_name = 'data/BoxOfficeGrossComplete_' + studio + '.tsv'
+            file_name = datafile.get_data_file_directory() + 'BoxOfficeGrossComplete_' + studio + '.tsv'
             if not datafile.is_data_file_complete(file_name):
                 studio_data = []
                 for movie in movies:

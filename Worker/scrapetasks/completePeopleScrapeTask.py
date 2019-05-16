@@ -1,9 +1,10 @@
 from scrapetasks.scrapetask import ScrapeTask
 from common.scrapeutil import *
+from common.datafile import *
 import csv
 
 
-class PeopleScrapeTask(ScrapeTask):
+class CompletePeopleScrapeTask(ScrapeTask):
     
     def scrape(self):
         self.people = dict()
@@ -12,7 +13,7 @@ class PeopleScrapeTask(ScrapeTask):
         self.scrapePeople('Producer')
         self.scrapePeople('Writer')
         
-        fileName = 'People.tsv'
+        fileName = get_data_file_directory() + 'People.tsv'
         outfile = open(fileName, "w", newline='')
         writer = csv.writer(outfile, delimiter='\t')
         for id, v in self.people.items():

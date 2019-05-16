@@ -1,16 +1,13 @@
-from scrapetasks.movieScrapeTask import MovieScrapeTask
-from scrapetasks.peopleScrapeTask import PeopleScrapeTask
-from scrapetasks.boxOfficeScrapeTask import BoxOfficeScrapeTask
+from common.sqlwriter import WriteType
+from scrapetasks.scrapetask import ExecutionMode
+from scrapetasks.completeMovieScrapeTask import CompleteMovieScrapeTask
+from scrapetasks.completePeopleScrapeTask import CompletePeopleScrapeTask
+from scrapetasks.completeBoxOfficeScrapeTask import CompleteBoxOfficeScrapeTask
 from scrapetasks.testMoviesScrapeTask import TestMoviesScrapeTask
+from scrapetasks.weeklyMovieUpdateScrapeTask import WeeklyMovieUpdateScrapeTask
+from scrapetasks.weeklyNewMoviesScrapeTask import WeeklyNewMoviesScrapeTask
 from scrapetasks.weeklyGrossScrapeTask import WeeklyGrossScrapeTask
-from enum import Enum
 import configparser
-
-
-class Mode(Enum):
-    weeklyUpdate = 1
-    brandNew = 2
-    rebuildTables = 3
 
 
 def run():
@@ -18,15 +15,12 @@ def run():
     print('Starting scraping data from boxofficemojo.com...')
 
     weekly_tasks = list()
-    weekly_tasks.append(WeeklyGrossScrapeTask("WeeklyGross", [
-        'Id',
-        'MovieId',
-        'WeeklyGross',
-        'TheaterCount'
-    ], False))
 
-    rebuild_tables_tasks = list()
-    rebuild_tables_tasks.append(MovieScrapeTask("Movies", [
+    weekly_tasks.append(WeeklyMovieUpdateScrapeTask("Movies", [
+        'DomesticGross'
+    ], WriteType.update, ExecutionMode.weeklyUpdate, True))
+
+    weekly_tasks.append(WeeklyNewMoviesScrapeTask("Movies", [
         'Id',
         'Name',
         'Studio',
@@ -37,34 +31,62 @@ def run():
         'RunTime',
         'MpaaRating',
         'ProductionBudget'
-    ], False))
-    rebuild_tables_tasks.append(PeopleScrapeTask("People", [
+    ], WriteType.insert, ExecutionMode.weeklyUpdate, True))
+
+    weekly_tasks.append(WeeklyGrossScrapeTask("WeeklyGross", [
+        'Id',
+        'MovieId',
+        'WeeklyGross',
+        'TheaterCount'
+    ], WriteType.insert, ExecutionMode.weeklyUpdate, False))
+
+    compete_rewrite_tasks = list()
+    compete_rewrite_tasks.append(CompleteMovieScrapeTask("Movies", [
+        'Id',
+        'Name',
+        'Studio',
+        'DomesticGross',
+        'Distributor',
+        'ReleasedDate',
+        'Genre',
+        'RunTime',
+        'MpaaRating',
+        'ProductionBudget'
+    ], WriteType.insert, ExecutionMode.completeRewrite, False))
+
+    compete_rewrite_tasks.append(CompletePeopleScrapeTask("People", [
         'Id',
         'Name',
         'Actor',
         'Director',
         'Producer',
         'ScreenWriter'
-    ], False))
+    ], WriteType.insert, ExecutionMode.completeRewrite, False))
 
-    rebuild_tables_tasks.append(BoxOfficeScrapeTask("boxOffice", [
+    compete_rewrite_tasks.append(CompleteBoxOfficeScrapeTask("boxOffice", [
         'MovieId',
         'StartDate',
         'EndDate',
         'Gross',
         'TheaterCount'
-    ], False))
-    rebuild_tables_tasks.append(TestMoviesScrapeTask('TestMovies', [
+    ], WriteType.insert, ExecutionMode.completeRewrite, False))
+
+    compete_rewrite_tasks.append(TestMoviesScrapeTask('TestMovies', [
         'Id',
         'Name',
         'Studio',
         'DomesticGross'
-    ], True))
+    ], WriteType.insert, ExecutionMode.completeRewrite, True))
 
-    for task in rebuild_tables_tasks:
-        print('\tExecuting scrape task for table ' + task.tableName + '...', end='')
+    config = configparser.ConfigParser()
+    config.read('config/worker.ini')
+    tasks = weekly_tasks if config['execution']['executionMode'] == "weeklyUpdate" else compete_rewrite_tasks
+
+    for task in tasks:
+        print('\tExecuting ' + type(task).__name__ + ' for table ' + task.tableName + '...', end='')
         task.execute()
         print('DONE!')
+
     print('Finished scraping data from boxofficemojo.com.')
 
 
