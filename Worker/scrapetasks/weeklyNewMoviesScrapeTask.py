@@ -1,7 +1,6 @@
 from scrapetasks.scrapetask import ScrapeTask
 from common.scrapeutil import *
 from common.datafile import *
-from common.parsingutil import *
 import csv
 
 

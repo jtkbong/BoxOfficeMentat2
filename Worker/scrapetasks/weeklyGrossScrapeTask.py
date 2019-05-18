@@ -23,9 +23,7 @@ class WeeklyGrossScrapeTask(ScrapeTask):
                 theaterCountCell = cells[6]
                 theaterCount = text_to_int(theaterCountCell.text)
                 data.append([movieId, weeklyGross, theaterCount])
-        
-        columnNames = ["MovieId", "WeeklyGross", "TheaterCount"]
-        
+
         date = ''
         headers = scrape_elements('h2', url, None)
         for header in headers:
