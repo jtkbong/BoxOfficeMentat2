@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from common.sqlwriter import *
-import os
 from enum import Enum
+import os
 
 
 class ExecutionMode(Enum):

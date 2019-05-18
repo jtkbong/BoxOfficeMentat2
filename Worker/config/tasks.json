@@ -1,9 +1,104 @@
 {
-  "boxOfficeScrapeTask": {
-    "mode": "rebuildData"
-  }
+  "WeeklyMovieUpdate": {
+    "tableName": "Movies",
+    "tableColumns": [
+        "DomesticGross"
+    ],
+    "writeType": "update",
+    "executionMode": "weeklyUpdate",
+    "enabled": false
+  },
 
-  "weeklyBoxOfficeUpdate": {
-    "mode": "weeklyUpdate"
+  "WeeklyGross": {
+    "tableName": "WeeklyGross",
+    "tableColumns": [
+        "Id",
+        "MovieId",
+        "WeeklyGross",
+        "TheaterCount"
+    ],
+    "writeType": "insert",
+    "executionMode": "weeklyUpdate",
+    "enabled": false
+  },
+
+  "WeeklyNewMovies": {
+    "tableName": "Movies",
+    "tableColumns": [
+        "Id",
+        "Name",
+        "Studio",
+        "DomesticGross",
+        "Distributor",
+        "ReleasedDate",
+        "Genre",
+        "RunTime",
+        "MpaaRating",
+        "ProductionBudget"
+    ],
+    "writeType": "insert",
+    "executionMode": "weeklyUpdate",
+    "enabled": false
+  },
+
+  "CompleteMovie": {
+    "tableName": "Movies",
+    "tableColumns": [
+        "Id",
+        "Name",
+        "Studio",
+        "DomesticGross",
+        "Distributor",
+        "ReleasedDate",
+        "Genre",
+        "RunTime",
+        "MpaaRating",
+        "ProductionBudget"
+    ],
+    "writeType": "insert",
+    "executionMode": "completeRewrite",
+    "enabled": false
+  },
+
+  "CompletePeople": {
+    "tableName": "People",
+    "tableColumns": [
+        "Id",
+        "Name",
+        "Actor",
+        "Director",
+        "Producer",
+        "ScreenWriter"
+    ],
+    "writeType": "insert",
+    "executionMode": "completeRewrite",
+    "enabled": false
+  },
+
+  "CompleteBoxOffice": {
+    "tableName": "BoxOffice",
+    "tableColumns": [
+      "MovieId",
+      "StartDate",
+      "EndDate",
+      "Gross",
+      "TheaterCount"
+    ],
+    "writeType": "insert",
+    "executionMode": "completeRewrite",
+    "enabled": false
+  },
+
+  "TestMovies": {
+    "tableName": "TestMovies",
+    "tableColumns": [
+      "Id",
+      "Name",
+      "Studio",
+      "DomesticGross"
+    ],
+    "writeType": "insert",
+    "executionMode": "completeRewrite",
+    "enabled": true
   }
 }
