@@ -2,6 +2,7 @@ from scrapetasks.scrapetask import ExecutionMode
 from scrapetasks.completeMovieScrapeTask import CompleteMovieScrapeTask
 from scrapetasks.completePeopleScrapeTask import CompletePeopleScrapeTask
 from scrapetasks.completeBoxOfficeScrapeTask import CompleteBoxOfficeScrapeTask
+from scrapetasks.completeCreditsScrapeTask import CompleteCreditsScrapeTask
 from scrapetasks.testMoviesScrapeTask import TestMoviesScrapeTask
 from scrapetasks.weeklyMovieUpdateScrapeTask import WeeklyMovieUpdateScrapeTask
 from scrapetasks.weeklyNewMoviesScrapeTask import WeeklyNewMoviesScrapeTask
@@ -40,6 +41,8 @@ def create_task_from_config(task_name):
             return CompleteMovieScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
         elif task_name == "CompletePeople":
             return CompletePeopleScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
+        elif task_name == "CompleteCredits":
+            return CompleteCreditsScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
         elif task_name == "CompleteBoxOffice":
             return CompleteBoxOfficeScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
         elif task_name == "TestMovies":

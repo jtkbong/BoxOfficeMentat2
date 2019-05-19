@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from common import parsingutil
+from common import datacache
 
 
 def scrape_element(element_type, url, attributes):
@@ -63,3 +64,20 @@ def scrape_movie(url, movie_name, studio_name):
         production_budget = parsingutil.production_budget_to_int(cells[6 + offset].text)
         row_data = [id, movie_name, studio_name, domestic_gross, distributor, release_date, genre, run_time, mpaa_rating, production_budget]
         return row_data
+
+
+def get_studios_list():
+    studios = datacache.get_list('Studios')
+    if studios is None:
+        studios = []
+        tables = scrape_tables("https://www.boxofficemojo.com/studio/?view2=allstudios&view=company&p=.htm",
+                               {'border': '0', 'cellspacing': '1', 'cellpadding': '3'})
+        for table in tables:
+            for row in table.findAll('tr'):
+                for cell in row.findAll('a'):
+                    href = cell.get('href')
+                    studio_name = parsingutil.get_studio_from_url(href)
+                    studios.append({'studio_name': studio_name, 'href': href})
+        datacache.set_list('Studios', studios)
+        studios = datacache.get_list('Studios')
+    return studios

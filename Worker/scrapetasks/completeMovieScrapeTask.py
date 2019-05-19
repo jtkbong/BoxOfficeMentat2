@@ -2,7 +2,6 @@ from scrapetasks.scrapetask import ScrapeTask
 from common import scrapeutil
 from common import datacache
 from common import datafile
-from common import parsingutil
 import csv
 
 
@@ -13,28 +12,12 @@ class CompleteMovieScrapeTask(ScrapeTask):
         self.movies = set()
 
     def scrape(self):
-        studios = self.get_studios_list()
+        studios = scrapeutil.get_studios_list()
         for studio in studios:
             self.scrape_studio_movies(studio['studioName'], studio['href'])
         datacache.set_list('Movies', list(self.movies))
         self.scrapeSuccess = True
-                            
-    def get_studios_list(self):
-        studios = datacache.get_list('Studios')
-        if studios is None:
-            studios = []
-            tables = scrapeutil.scrape_tables("https://www.boxofficemojo.com/studio/?view2=allstudios&view=company&p=.htm",
-                                   {'border': '0', 'cellspacing': '1', 'cellpadding': '3'})
-            for table in tables:
-                for row in table.findAll('tr'):            
-                    for cell in row.findAll('a'):
-                        href = cell.get('href')
-                        studio_name = parsingutil.get_studio_from_url(href)
-                        studios.append({'studio_name': studio_name, 'href': href})
-            datacache.set_list('Studios', studios)
-            studios = datacache.get_list('Studios')
-        return studios    
-                            
+
     def scrape_studio_movies(self, studio_name, url):
         i = 1
         file_name = datafile.get_data_file_directory() + studio_name + '_Movies.tsv'

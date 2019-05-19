@@ -25,15 +25,13 @@ class CompletePeopleScrapeTask(ScrapeTask):
     def scrapePeople(self, type):        
         firstRowKeys = list()
         pageCount = 1
-        scrape = True
-        while scrape:
+        while True:
             fullUrl = "https://www.boxofficemojo.com/people/?view=%s&p=.htm&pagenum=%d" % (type, pageCount)
             trs = scrape_table_rows(fullUrl, attributes={'border': '0', 'cellspacing': '1', 'cellpadding': '5', 'width': '98%'})
             searchType = 'view=' + type
             if len(trs) > 0:
                 key = trs[1].text
                 if key in firstRowKeys:
-                    scrape = False
                     break
                 else:
                     firstRowKeys.append(trs[1].text)

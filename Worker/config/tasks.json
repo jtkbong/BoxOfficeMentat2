@@ -75,6 +75,18 @@
     "enabled": false
   },
 
+  "CompleteCredits": {
+    "tableName": "Credits",
+    "tableColumns": [
+      "MovieId",
+      "PersonId",
+      "Relationship"
+    ],
+    "writeType": "insert",
+    "executionMode": "completeRewrite",
+    "enabled": false
+  },
+
   "CompleteBoxOffice": {
     "tableName": "BoxOffice",
     "tableColumns": [
