@@ -41,6 +41,18 @@
     "enabled": false
   },
 
+  "WeeklyCredits": {
+    "tableName": "Credits",
+    "tableColumns": [
+      "MovieId",
+      "PersonId",
+      "Relationship"
+    ],
+    "writeType": "insert",
+    "executionMode": "weeklyUpdate",
+    "enabled": false
+  },
+
   "CompleteMovie": {
     "tableName": "Movies",
     "tableColumns": [

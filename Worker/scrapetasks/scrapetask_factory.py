@@ -6,6 +6,7 @@ from scrapetasks.completeCreditsScrapeTask import CompleteCreditsScrapeTask
 from scrapetasks.testMoviesScrapeTask import TestMoviesScrapeTask
 from scrapetasks.weeklyMovieUpdateScrapeTask import WeeklyMovieUpdateScrapeTask
 from scrapetasks.weeklyNewMoviesScrapeTask import WeeklyNewMoviesScrapeTask
+from scrapetasks.weeklyCreditsScrapeTask import WeeklyCreditsScrapeTask
 from scrapetasks.weeklyGrossScrapeTask import WeeklyGrossScrapeTask
 from common.sqlwriter import WriteType
 import json
@@ -37,6 +38,8 @@ def create_task_from_config(task_name):
             return WeeklyGrossScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
         elif task_name == "WeeklyNewMovies":
             return WeeklyNewMoviesScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
+        elif task_name == "WeeklyCredits":
+            return WeeklyCreditsScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
         elif task_name == "CompleteMovie":
             return CompleteMovieScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
         elif task_name == "CompletePeople":

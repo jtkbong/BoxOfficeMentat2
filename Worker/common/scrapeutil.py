@@ -16,8 +16,8 @@ def scrape_elements(element_type, url, attributes):
     response = requests.get(url)
     html = response.content
     soup = BeautifulSoup(html, features="html.parser")    
-    element = soup.findAll(element_type, attrs=attributes)
-    return element
+    elements = soup.findAll(element_type, attrs=attributes)
+    return elements
 
 
 def scrape_list(url, attributes):
