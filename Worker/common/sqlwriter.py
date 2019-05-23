@@ -65,7 +65,7 @@ def delete_row_in_db(cursor, table_name, row_id):
 def clear_database(table_name):
     connection = get_sql_conn()
     cursor = connection.cursor()   
-    command = 'DELETE FROM boxofficementat.' + table_name + ' WHERE Id IS NOT NULL;'
+    command = 'DELETE FROM boxofficementat.' + table_name
     cursor.execute(command)
     connection.commit()
     connection.close()

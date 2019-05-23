@@ -14,7 +14,7 @@ class CompleteMovieScrapeTask(ScrapeTask):
     def scrape(self):
         studios = scrapeutil.get_studios_list()
         for studio in studios:
-            self.scrape_studio_movies(studio['studioName'], studio['href'])
+            self.scrape_studio_movies(studio['studio_name'], studio['href'])
         datacache.set_list('Movies', list(self.movies))
         self.scrapeSuccess = True
 

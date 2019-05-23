@@ -41,7 +41,7 @@ def get_id_from_url(url):
 
 
 def get_studio_from_url(url):
-    if url is None or 'studio=' not in url:
+    if url is None or 'studio=' not in url or '.htm' not in url:
         return None
     return url[url.index('studio=') + 7: url.index('.htm')]
 
