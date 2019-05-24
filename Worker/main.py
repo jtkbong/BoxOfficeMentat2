@@ -5,10 +5,10 @@ import configparser
 
 
 def clear_all_tables():
-    sqlwriter.clear_database('Credits')
-    sqlwriter.clear_database('DomesticBoxOffice')
-    sqlwriter.clear_database('People')
-    sqlwriter.clear_database('Movies')
+    sqlwriter.clear_table('Credits')
+    sqlwriter.clear_table('DomesticBoxOffice')
+    sqlwriter.clear_table('People')
+    sqlwriter.clear_table('Movies')
 
 
 def run_tasks(tasks):

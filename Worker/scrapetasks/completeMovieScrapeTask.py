@@ -17,6 +17,9 @@ class CompleteMovieScrapeTask(ScrapeTask):
         self.scrapeSuccess = True
 
     def scrape_studio_movies(self, studio_name, url):
+        if studio_name is None or studio_name == '':
+            return
+
         i = 1
         file_name = datafile.get_data_file_directory() + studio_name + '_Movies.tsv'
         self.files.append(file_name)
@@ -35,8 +38,9 @@ class CompleteMovieScrapeTask(ScrapeTask):
                             if movie_name and movie_name != 'Rank':
                                 href = cell.get('href')
                                 row_data = scrapeutil.scrape_movie(href, movie_name, studio_name)
-                                writer.writerows([row_data])
-                                self.movies.add(row_data[0])
+                                if row_data is not None:
+                                    writer.writerows([row_data])
+                                    self.movies.add(row_data[0])
                     i += 1
                 else:
                     break

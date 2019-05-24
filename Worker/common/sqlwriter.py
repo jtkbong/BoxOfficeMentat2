@@ -50,13 +50,11 @@ def write_rows_to_db_retries(table_name, column_names, write_type, rows, ignore_
 
 def insert_row_to_db(cursor, table_name, column_names, row):
     command = get_insert_row_command(table_name, column_names)
-    print(command + ": " + row)
     cursor.execute(command, (row.split('\t')))
 
 
 def update_row_in_db(cursor, table_name, column_names, row):
     command = get_update_row_command(table_name, column_names)
-    print(command + ": " + row)
     cursor.execute(command, (row.split('\t')))
 
 
@@ -66,7 +64,7 @@ def delete_row_in_db(cursor, table_name, row_id):
     cursor.execute(command, row_id)
 
 
-def clear_database(table_name):
+def clear_table(table_name):
     connection = get_sql_conn()
     cursor = connection.cursor()   
     command = 'DELETE FROM boxofficementat.' + table_name

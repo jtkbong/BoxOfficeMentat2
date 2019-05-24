@@ -76,7 +76,6 @@ def scrape_person(credit_type, person_id):
     is_director = 1 if 'D' in roles else 0
     is_producer = 1 if 'P' in roles else 0
     is_writer = 1 if 'W' in roles else 0
-    print(str(is_actor) + str(is_director) + str(is_producer) + str(is_writer))
     return [person_id, person_name, is_actor, is_director, is_producer, is_writer]
 
 
