@@ -66,6 +66,31 @@ def scrape_movie(url, movie_name, studio_name):
         return row_data
 
 
+def scrape_person(credit_type, person_id):
+    full_url = 'https://www.boxofficemojo.com/people/chart/?view=%s&id=%s.htm' % (credit_type, person_id)
+    name_header = scrape_element('h1', full_url, {})
+    person_name = name_header.text
+
+    roles = get_person_roles(credit_type, person_id)
+    is_actor = 1 if 'A' in roles else 0
+    is_director = 1 if 'D' in roles else 0
+    is_producer = 1 if 'P' in roles else 0
+    is_writer = 1 if 'W' in roles else 0
+    return [person_id, person_name, is_actor, is_director, is_producer, is_writer]
+
+
+def get_person_roles(credit_type, person_id):
+    full_url = 'https://www.boxofficemojo.com/people/chart/?view=%s&id=%s.htm' % (credit_type, person_id)
+    nav_tabs = scrape_list(full_url, {'class': 'nav_tabs'})
+    roles = ''
+    if nav_tabs is None:
+        roles += credit_type[0:1]
+    else:
+        for tab in nav_tabs.findAll('li'):
+            roles += tab.text[0:1]
+    return roles
+
+
 def get_studios_list():
     studios = datacache.get_list('Studios')
     if studios is None:

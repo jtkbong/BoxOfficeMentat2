@@ -1,27 +1,4 @@
 {
-  "WeeklyMovieUpdate": {
-    "tableName": "Movies",
-    "tableColumns": [
-        "DomesticGross"
-    ],
-    "writeType": "update",
-    "executionMode": "weeklyUpdate",
-    "enabled": false
-  },
-
-  "WeeklyGross": {
-    "tableName": "WeeklyGross",
-    "tableColumns": [
-        "Id",
-        "MovieId",
-        "WeeklyGross",
-        "TheaterCount"
-    ],
-    "writeType": "insert",
-    "executionMode": "weeklyUpdate",
-    "enabled": false
-  },
-
   "WeeklyNewMovies": {
     "tableName": "Movies",
     "tableColumns": [
@@ -41,6 +18,32 @@
     "enabled": false
   },
 
+  "WeeklyMovieUpdate": {
+    "tableName": "Movies",
+    "tableColumns": [
+        "DomesticGross"
+    ],
+    "writeType": "update",
+    "executionMode": "weeklyUpdate",
+    "enabled": false
+  },
+
+  "WeeklyPeople": {
+    "tableName": "People",
+    "tableColumns": [
+        "Id",
+        "Name",
+        "Actor",
+        "Director",
+        "Producer",
+        "ScreenWriter"
+    ],
+    "writeType": "insert",
+    "executionMode": "weeklyUpdate",
+    "ignoreIntegrityErrors": true,
+    "enabled": false
+  },
+
   "WeeklyCredits": {
     "tableName": "Credits",
     "tableColumns": [
@@ -51,6 +54,21 @@
     "writeType": "insert",
     "executionMode": "weeklyUpdate",
     "enabled": false
+  },
+
+  "WeeklyGross": {
+    "tableName": "DomesticBoxOffice",
+    "tableColumns": [
+      "Id",
+      "MovieId",
+      "StartDate",
+      "EndDate",
+      "Gross",
+      "TheaterCount"
+    ],
+    "writeType": "insert",
+    "executionMode": "weeklyUpdate",
+    "enabled": true
   },
 
   "CompleteMovie": {
@@ -69,7 +87,7 @@
     ],
     "writeType": "insert",
     "executionMode": "completeRewrite",
-    "enabled": true
+    "enabled": false
   },
 
   "CompletePeople": {
@@ -100,8 +118,9 @@
   },
 
   "CompleteBoxOffice": {
-    "tableName": "BoxOffice",
+    "tableName": "DomesticBoxOffice",
     "tableColumns": [
+      "Id",
       "MovieId",
       "StartDate",
       "EndDate",

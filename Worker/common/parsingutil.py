@@ -1,4 +1,5 @@
 import datetime
+import calendar
 
 
 def dollar_text_to_int(text):
@@ -51,3 +52,21 @@ def text_to_int(s):
         return int(s.replace(',', ''))
     except ValueError:
         return 0
+
+
+def week_text_to_start_end_dates(text):
+    year_text = text[text.index(',') + 1:].strip()
+    start_year = int(year_text)
+
+    start_date_text = text[0:text.index('-')]
+    start_month_text = start_date_text[0:start_date_text.index(' ')]
+    start_month = list(calendar.month_name).index(start_month_text)
+    start_day = int(start_date_text[start_date_text.index(' ') + 1:])
+
+    if 'December' in text and 'January' in text:
+        start_year -= 1
+
+    start_date = datetime.date(start_year, start_month, start_day)
+
+    end_date = start_date + datetime.timedelta(days=6)
+    return [start_date, end_date]

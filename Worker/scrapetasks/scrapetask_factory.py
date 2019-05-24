@@ -6,6 +6,7 @@ from scrapetasks.completeCreditsScrapeTask import CompleteCreditsScrapeTask
 from scrapetasks.testMoviesScrapeTask import TestMoviesScrapeTask
 from scrapetasks.weeklyMovieUpdateScrapeTask import WeeklyMovieUpdateScrapeTask
 from scrapetasks.weeklyNewMoviesScrapeTask import WeeklyNewMoviesScrapeTask
+from scrapetasks.weeklyPeopleScrapeTask import WeeklyPeopleScrapeTask
 from scrapetasks.weeklyCreditsScrapeTask import WeeklyCreditsScrapeTask
 from scrapetasks.weeklyGrossScrapeTask import WeeklyGrossScrapeTask
 from common.sqlwriter import WriteType
@@ -29,27 +30,40 @@ def create_task_from_config(task_name):
         table_name = task_data['tableName']
         table_columns = task_data['tableColumns']
         write_type = WriteType[task_data['writeType']]
+        ignore_integrity_errors = False if 'ignoreIntegrityErrors' not in task_data \
+            else task_data['ignoreIntegrityErrors']
         execution_mode = ExecutionMode[task_data['executionMode']]
         enabled = task_data['enabled']
 
+        params = {
+            "table_name": table_name,
+            "table_columns": table_columns,
+            "write_type": write_type,
+            "execution_mode": execution_mode,
+            "ignore_integrity_errors": ignore_integrity_errors,
+            "task_enabled": enabled
+        }
+
         if task_name == "WeeklyMovieUpdate":
-            return WeeklyMovieUpdateScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
+            return WeeklyMovieUpdateScrapeTask(**params)
         elif task_name == "WeeklyGross":
-            return WeeklyGrossScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
+            return WeeklyGrossScrapeTask(**params)
         elif task_name == "WeeklyNewMovies":
-            return WeeklyNewMoviesScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
+            return WeeklyNewMoviesScrapeTask(**params)
+        elif task_name == "WeeklyPeople":
+            return WeeklyPeopleScrapeTask(**params)
         elif task_name == "WeeklyCredits":
-            return WeeklyCreditsScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
+            return WeeklyCreditsScrapeTask(**params)
         elif task_name == "CompleteMovie":
-            return CompleteMovieScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
+            return CompleteMovieScrapeTask(**params)
         elif task_name == "CompletePeople":
-            return CompletePeopleScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
+            return CompletePeopleScrapeTask(**params)
         elif task_name == "CompleteCredits":
-            return CompleteCreditsScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
+            return CompleteCreditsScrapeTask(**params)
         elif task_name == "CompleteBoxOffice":
-            return CompleteBoxOfficeScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
+            return CompleteBoxOfficeScrapeTask(**params)
         elif task_name == "TestMovies":
-            return TestMoviesScrapeTask(table_name, table_columns, write_type, execution_mode, enabled)
+            return TestMoviesScrapeTask(**params)
         else:
             return None
 

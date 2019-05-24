@@ -4,7 +4,7 @@ from common.datafile import *
 import csv
 
 
-class WeeklyCreditsScrapeTask(ScrapeTask):
+class WeeklyPeopleScrapeTask(ScrapeTask):
 
     def scrape(self):
         url = 'https://www.boxofficemojo.com/weekly/chart/'
@@ -19,7 +19,7 @@ class WeeklyCreditsScrapeTask(ScrapeTask):
                     movie_name_cell = row.find('a')
                     href = movie_name_cell.get('href')
                     movie_id = parsingutil.get_id_from_url(href)
-                    row_data = self.scrape_movie_credits(movie_id)
+                    row_data = iterate_movie_credits(movie_id)
                     data = data + row_data
         date = ''
         headers = scrape_elements('h2', url, None)
@@ -27,7 +27,7 @@ class WeeklyCreditsScrapeTask(ScrapeTask):
             if header.text != 'Weekly Box Office':
                 date = header.text.replace(',', '')
 
-        file_name = get_data_file_directory() + 'WeeklyCredits_' + date + '.tsv'
+        file_name = get_data_file_directory() + 'WeeklyPeople_' + date + '.tsv'
         outfile = open(file_name, "w", newline='')
         writer = csv.writer(outfile, delimiter='\t')
         writer.writerows(data)
@@ -35,15 +35,16 @@ class WeeklyCreditsScrapeTask(ScrapeTask):
         self.files.append(file_name)
         self.scrapeSuccess = True
 
-    def scrape_movie_credits(self, movie_id):
-        full_url = "https://www.boxofficemojo.com/movies/?page=main&id=%s.htm" % movie_id
-        roles = []
-        anchors = scrape_elements('a', full_url, {})
-        for anchor in anchors:
-            href = anchor.get('href')
-            if '?view=Writer' in href or '?view=Actor' in href or '?view=Director' in href or '?view=Producer' in href:
-                person_id = parsingutil.get_id_from_url(href)
-                role = href[href.index('view=') + 5: href.index('&')]
-                if person_id is not None:
-                    roles.append([movie_id, person_id, role])
-        return roles
+
+def iterate_movie_credits(movie_id):
+    full_url = "https://www.boxofficemojo.com/movies/?page=main&id=%s.htm" % movie_id
+    people = []
+    anchors = scrape_elements('a', full_url, {})
+    for anchor in anchors:
+        href = anchor.get('href')
+        if '?view=Writer' in href or '?view=Actor' in href or '?view=Director' in href or '?view=Producer' in href:
+            person_id = parsingutil.get_id_from_url(href)
+            if person_id is not None:
+                current_role = href[href.index('?view=') + 6:href.index('&')]
+                people.append(scrape_person(current_role, person_id))
+    return people

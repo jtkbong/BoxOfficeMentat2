@@ -7,9 +7,7 @@ import csv
 
 class CompleteMovieScrapeTask(ScrapeTask):
 
-    def __init__(self, table_name, table_columns, write_type, execution_mode, task_enabled):
-        ScrapeTask.__init__(self, table_name, table_columns, write_type, execution_mode, task_enabled)
-        self.movies = set()
+    movies = set()
 
     def scrape(self):
         studios = scrapeutil.get_studios_list()

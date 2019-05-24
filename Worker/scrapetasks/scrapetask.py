@@ -11,11 +11,12 @@ class ExecutionMode(Enum):
 
 class ScrapeTask(ABC):
     
-    def __init__(self, table_name, table_columns, write_type, execution_mode, task_enabled):
+    def __init__(self, table_name, table_columns, write_type, execution_mode, ignore_integrity_errors, task_enabled):
         self.tableName = table_name
         self.tableColumns = table_columns
         self.writeType = write_type
         self.executionMode = execution_mode
+        self.ignoreIntegrityErrors = ignore_integrity_errors
         self.enabled = task_enabled
         self.files = []
         self.scrapeSuccess = False
@@ -52,7 +53,8 @@ class ScrapeTask(ABC):
         for fileName in self.files:
             file = open(fileName, "r")
             lines = file.readlines()
-            write_rows_to_db_retries(self.tableName, self.tableColumns, self.writeType, lines)
+            write_rows_to_db_retries(
+                self.tableName, self.tableColumns, self.writeType, lines, self.ignoreIntegrityErrors)
         self.writeToDbSuccess = True
         
     def cleanup(self):
