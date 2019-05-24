@@ -15,7 +15,7 @@
     ],
     "writeType": "insert",
     "executionMode": "weeklyUpdate",
-    "enabled": false
+    "enabled": true
   },
 
   "WeeklyMovieUpdate": {
@@ -25,7 +25,7 @@
     ],
     "writeType": "update",
     "executionMode": "weeklyUpdate",
-    "enabled": false
+    "enabled": true
   },
 
   "WeeklyPeople": {
@@ -41,7 +41,7 @@
     "writeType": "insert",
     "executionMode": "weeklyUpdate",
     "ignoreIntegrityErrors": true,
-    "enabled": false
+    "enabled": true
   },
 
   "WeeklyCredits": {
@@ -53,7 +53,7 @@
     ],
     "writeType": "insert",
     "executionMode": "weeklyUpdate",
-    "enabled": false
+    "enabled": true
   },
 
   "WeeklyGross": {
@@ -87,7 +87,7 @@
     ],
     "writeType": "insert",
     "executionMode": "completeRewrite",
-    "enabled": false
+    "enabled": true
   },
 
   "CompletePeople": {

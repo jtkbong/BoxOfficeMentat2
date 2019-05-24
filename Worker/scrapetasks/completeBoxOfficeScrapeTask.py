@@ -51,7 +51,6 @@ class CompleteBoxOfficeScrapeTask(ScrapeTask):
 
     @retry(wait_fixed=5000, stop_max_attempt_number=MAX_RETRIES)
     def scrape_movie(self, movie_id):
-        print(movie_id)
         url = 'https://www.boxofficemojo.com/movies/?page=weekly&id=%s.htm' % movie_id
         tables = scrapeutil.scrape_tables(url, attributes={'class': 'chart-wide'})
         movie_rows = []
@@ -86,6 +85,10 @@ class CompleteBoxOfficeScrapeTask(ScrapeTask):
                 gross = parsingutil.dollar_text_to_int(gross_text)
                 theater_count = parsingutil.text_to_int(theater_count_text)
 
-                movie_rows.append([movie_id, start_date, end_date, gross, theater_count])
+                week_number_cell = cells[-1]
+                week_number = parsingutil.text_to_int(week_number_cell.text)
+
+                record_id = movie_id + str(week_number)
+                movie_rows.append([record_id, movie_id, start_date, end_date, gross, theater_count])
 
         return movie_rows
