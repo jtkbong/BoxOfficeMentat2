@@ -11,7 +11,9 @@ class ExecutionMode(Enum):
 
 class ScrapeTask(ABC):
     
-    def __init__(self, table_name, table_columns, write_type, execution_mode, ignore_integrity_errors, task_enabled):
+    def __init__(self,
+                 order, table_name, table_columns, write_type, execution_mode, ignore_integrity_errors, task_enabled):
+        self.order = order
         self.tableName = table_name
         self.tableColumns = table_columns
         self.writeType = write_type

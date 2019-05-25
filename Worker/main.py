@@ -12,10 +12,11 @@ def clear_all_tables():
 
 
 def run_tasks(tasks):
+    tasks.sort(key=lambda t: t.order)
     for task in tasks:
-        print('\tExecuting ' + type(task).__name__ + ' for table ' + task.tableName + '...', end='')
+        print('Executing ' + type(task).__name__ + ' for table ' + task.tableName + '...\n')
         task.execute()
-        print('DONE!')
+        print('DONE!\n')
 
 
 def run():
@@ -31,7 +32,7 @@ def run():
                 clear_all_tables()
         if config['execution']['executionMode'] is not None:
             execution_mode = ExecutionMode[config['execution']['executionMode']]
-            filtered_tasks = filter(lambda t: t.executionMode == execution_mode, tasks)
+            filtered_tasks = list(filter(lambda t: t.executionMode == execution_mode, tasks))
             run_tasks(filtered_tasks)
         else:
             run_tasks(tasks)

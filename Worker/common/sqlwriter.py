@@ -32,12 +32,10 @@ def write_rows_to_db_retries(table_name, column_names, write_type, rows, ignore_
                     success = True
                     continue
                 else:
-                    print("Integrity Error")
                     errors = open('writeErrors.txt', 'a')
                     errors.write('Integrity Error: %s, %s, %s\n' % (table_name, column_names, ','.join(rows)))
                     break
             except pymysql.err.OperationalError:
-                print("Operational Error")
                 time.sleep(30)
                 num_tries += 1
                 continue

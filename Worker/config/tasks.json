@@ -1,5 +1,6 @@
 {
   "WeeklyNewMovies": {
+    "order": 0,
     "tableName": "Movies",
     "tableColumns": [
         "Id",
@@ -19,6 +20,7 @@
   },
 
   "WeeklyMovieUpdate": {
+    "order": 1,
     "tableName": "Movies",
     "tableColumns": [
         "DomesticGross"
@@ -29,6 +31,7 @@
   },
 
   "WeeklyPeople": {
+    "order": 2,
     "tableName": "People",
     "tableColumns": [
         "Id",
@@ -45,6 +48,7 @@
   },
 
   "WeeklyCredits": {
+    "order": 3,
     "tableName": "Credits",
     "tableColumns": [
       "MovieId",
@@ -57,6 +61,7 @@
   },
 
   "WeeklyGross": {
+    "order": 4,
     "tableName": "DomesticBoxOffice",
     "tableColumns": [
       "Id",
@@ -72,6 +77,7 @@
   },
 
   "CompleteMovie": {
+    "order": 0,
     "tableName": "Movies",
     "tableColumns": [
         "Id",
@@ -91,6 +97,7 @@
   },
 
   "CompletePeople": {
+    "order": 1,
     "tableName": "People",
     "tableColumns": [
         "Id",
@@ -106,6 +113,7 @@
   },
 
   "CompleteCredits": {
+    "order": 2,
     "tableName": "Credits",
     "tableColumns": [
       "MovieId",
@@ -118,6 +126,7 @@
   },
 
   "CompleteBoxOffice": {
+    "order": 3,
     "tableName": "DomesticBoxOffice",
     "tableColumns": [
       "Id",
@@ -133,6 +142,7 @@
   },
 
   "TestMovies": {
+    "order": 99,
     "tableName": "TestMovies",
     "tableColumns": [
       "Id",

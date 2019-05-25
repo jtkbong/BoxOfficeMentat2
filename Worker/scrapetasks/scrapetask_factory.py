@@ -27,6 +27,7 @@ def create_task_from_config(task_name):
     with open('config/tasks.json') as json_file:
         data = json.load(json_file)
         task_data = data[task_name]
+        order = task_data['order']
         table_name = task_data['tableName']
         table_columns = task_data['tableColumns']
         write_type = WriteType[task_data['writeType']]
@@ -36,6 +37,7 @@ def create_task_from_config(task_name):
         enabled = task_data['enabled']
 
         params = {
+            "order": order,
             "table_name": table_name,
             "table_columns": table_columns,
             "write_type": write_type,
