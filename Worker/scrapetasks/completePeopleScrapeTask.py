@@ -18,7 +18,7 @@ class CompletePeopleScrapeTask(ScrapeTask):
         outfile = open(file_name, "w", newline='')
         writer = csv.writer(outfile, delimiter='\t')
         for person_id, person_data in self.people.items():
-            writer.writerows(person_data)
+            writer.writerows([person_data])
         mark_data_file_complete(writer)
         self.files.append(file_name)
         self.scrapeSuccess = True

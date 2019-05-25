@@ -27,13 +27,14 @@ def write_rows_to_db_retries(table_name, column_names, write_type, rows, ignore_
                 elif write_type is WriteType.update:
                     update_row_in_db(cursor, table_name, column_names, row)
                 success = True
+                break
             except pymysql.err.IntegrityError:
                 if ignore_integrity_errors:
                     success = True
                     continue
                 else:
                     errors = open('writeErrors.txt', 'a')
-                    errors.write('Integrity Error: %s, %s, %s\n' % (table_name, column_names, ','.join(rows)))
+                    errors.write('Integrity Error: %s, [%s]\n' % (table_name, ','.join(row.split('\t'))))
                     break
             except pymysql.err.OperationalError:
                 time.sleep(30)
@@ -41,7 +42,7 @@ def write_rows_to_db_retries(table_name, column_names, write_type, rows, ignore_
                 continue
         if num_tries == maxTries and not success:
             errors = open('writeErrors.txt', 'a')
-            errors.write('Max Tries Reached: %s, %s, %s\n' % (table_name, column_names, ','.join(rows)))
+            errors.write('Max Tries Reached: %s, [%s]\n' % (table_name, ','.join(row.split('\t'))))
     connection.commit()
     connection.close()
 
