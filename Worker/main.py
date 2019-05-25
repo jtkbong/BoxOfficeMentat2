@@ -21,7 +21,7 @@ def run_tasks(tasks):
 
 
 def run():
-    logging.log_info('Starting scraping data from boxofficemojo.com...')
+    logging.log_info('Starting scraping data from boxofficemojo.com...\n\n')
 
     tasks = create_tasks_from_config()
     config = configuration.get_config()
@@ -41,9 +41,9 @@ def run():
 
 
 def run_as_lambda(event, context):
-    logging.log_info("Event received: ", event)
-    logging.log_info("Log stream name: ", context.log_stream_name)
-    logging.log_info("Log group name: ", context.log_group_name)
+    logging.log_info("Event received: %s", event)
+    logging.log_info("Log stream name: %s", context.log_stream_name)
+    logging.log_info("Log group name: %s", context.log_group_name)
     run()
 
 
