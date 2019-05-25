@@ -93,7 +93,7 @@
     ],
     "writeType": "insert",
     "executionMode": "completeRewrite",
-    "enabled": true
+    "enabled": false
   },
 
   "CompletePeople": {
@@ -109,7 +109,7 @@
     ],
     "writeType": "insert",
     "executionMode": "completeRewrite",
-    "enabled": true
+    "enabled": false
   },
 
   "CompleteCredits": {
@@ -122,7 +122,7 @@
     ],
     "writeType": "insert",
     "executionMode": "completeRewrite",
-    "enabled": true
+    "enabled": false
   },
 
   "CompleteBoxOffice": {
@@ -138,7 +138,7 @@
     ],
     "writeType": "insert",
     "executionMode": "completeRewrite",
-    "enabled": true
+    "enabled": false
   },
 
   "TestMovies": {
