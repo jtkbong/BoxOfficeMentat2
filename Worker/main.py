@@ -1,7 +1,8 @@
 from scrapetasks.scrapetask import *
 from scrapetasks.scrapetask_factory import create_tasks_from_config
 from common import sqlwriter
-import configparser
+from common import configuration
+from common import logging
 
 
 def clear_all_tables():
@@ -14,17 +15,16 @@ def clear_all_tables():
 def run_tasks(tasks):
     tasks.sort(key=lambda t: t.order)
     for task in tasks:
-        print('Executing ' + type(task).__name__ + ' for table ' + task.tableName + '...\n')
+        logging.log_info('Executing ' + type(task).__name__ + ' for table ' + task.tableName + '...\n')
         task.execute()
-        print('DONE!\n')
+        logging.log_info('DONE!\n')
 
 
 def run():
-    print('Starting scraping data from boxofficemojo.com...')
+    logging.log_info('Starting scraping data from boxofficemojo.com...')
 
     tasks = create_tasks_from_config()
-    config = configparser.ConfigParser()
-    config.read('config/worker.ini')
+    config = configuration.get_config()
 
     if config['execution'] is not None:
         if config['execution']['purgeExistingData'] is not None:
@@ -37,13 +37,13 @@ def run():
         else:
             run_tasks(tasks)
 
-    print('Finished scraping data from boxofficemojo.com.')
+    logging.log_info('Finished scraping data from boxofficemojo.com.')
 
 
 def run_as_lambda(event, context):
-    print("Event received: ", event)
-    print("Log stream name: ", context.log_stream_name)
-    print("Log group name: ", context.log_group_name)
+    logging.log_info("Event received: ", event)
+    logging.log_info("Log stream name: ", context.log_stream_name)
+    logging.log_info("Log group name: ", context.log_group_name)
     run()
 
 

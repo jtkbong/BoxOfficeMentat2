@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from common.sqlwriter import *
+from common import logging
 from enum import Enum
 import os
 
@@ -28,27 +29,29 @@ class ScrapeTask(ABC):
     
     def execute(self):
         if self.enabled:
-            print("\tScraping web pages now...\n")
+            logging.log_info("\tScraping web pages now...\n")
             self.scrape()
             if self.scrapeSuccess:
-                print("\tScrape successful.\n")
+                logging.log_info("\tScrape successful.\n")
                 if self.executionMode is ExecutionMode.completeRewrite:
-                    print("\tClearing table...\n")
+                    logging.log_info("\tClearing table...\n")
                     self.clear_table()
                     if self.clearTableSuccess:
-                        print("\tCleared table. Started writing to table...\n")
+                        logging.log_info("\tCleared table. Started writing to table...\n")
                         self.write_to_db()
                         if self.writeToDbSuccess:
-                            print("Finished writing to table. Cleaning up data files...\n")
+                            logging.log_info("Finished writing to table. Cleaning up data files...\n")
                             self.cleanup()
                 else:
-                    print("\tStarted writing to table...\n")
+                    logging.log_info("\tStarted writing to table...\n")
                     self.write_to_db()
                     if self.writeToDbSuccess:
-                        print("Finished writing to table. Cleaning up data files...\n")
+                        logging.log_info("\tFinished writing to table.\n")
+                        logging.log_info("\tCleaning up data files...\n")
                         self.cleanup()
+                        logging.log_info("\tClean up complete.\n")
         else:
-            print("\tTask was disabled. Skipping!\n")
+            logging.log_info("\tTask was disabled. Skipping!\n")
     
     @abstractmethod
     def scrape(self):
@@ -71,6 +74,6 @@ class ScrapeTask(ABC):
             try:
                 os.remove(file)
             except FileNotFoundError:
-                print("\tUnable to find file " + file + " to delete. Please manually verify after cleanup.")
+                logging.log_error("\tUnable to find file " + file + " to delete. Please manually verify after cleanup.")
                 continue
         self.cleanupSuccess = True

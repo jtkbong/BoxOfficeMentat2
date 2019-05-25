@@ -16,6 +16,7 @@
     ],
     "writeType": "insert",
     "executionMode": "weeklyUpdate",
+    "ignoreIntegrityErrors": true,
     "enabled": true
   },
 
@@ -73,6 +74,7 @@
     ],
     "writeType": "insert",
     "executionMode": "weeklyUpdate",
+    "ignoreIntegrityErrors": true,
     "enabled": true
   },
 

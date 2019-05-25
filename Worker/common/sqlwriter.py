@@ -1,6 +1,7 @@
+from common import configuration
+from common import logging
 import pymysql
 import time
-import configparser
 from enum import Enum
 
 
@@ -33,16 +34,18 @@ def write_rows_to_db_retries(table_name, column_names, write_type, rows, ignore_
                     success = True
                     continue
                 else:
-                    errors = open('writeErrors.txt', 'a')
-                    errors.write('Integrity Error: %s, [%s]\n' % (table_name, ','.join(row.split('\t'))))
+                    row_remove_new_line = row.replace('\n', '')
+                    logging.log_error(
+                        'Integrity Error: %s, [%s]\n' % (table_name, ','.join(row_remove_new_line.split('\t'))))
                     break
             except pymysql.err.OperationalError:
                 time.sleep(30)
                 num_tries += 1
                 continue
         if num_tries == maxTries and not success:
-            errors = open('writeErrors.txt', 'a')
-            errors.write('Max Tries Reached: %s, [%s]\n' % (table_name, ','.join(row.split('\t'))))
+            row_remove_new_line = row.replace('\n', '')
+            logging.log_error(
+                'Max Tries Reached: %s, [%s]\n' % (table_name, ','.join(row_remove_new_line.split('\t'))))
     connection.commit()
     connection.close()
 
@@ -90,10 +93,7 @@ def get_update_row_command(table_name, column_names):
 
 
 def get_sql_conn():
-
-    config = configparser.ConfigParser()
-    config.read('config/worker.ini')
-    db_info = config['db']
+    db_info = configuration.get_config()['db']
     db_host = db_info['dbhost']
     db_user = db_info['dbuser']
     db_password = db_info['dbpassword']

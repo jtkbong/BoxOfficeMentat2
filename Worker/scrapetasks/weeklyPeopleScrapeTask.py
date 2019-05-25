@@ -27,7 +27,7 @@ class WeeklyPeopleScrapeTask(ScrapeTask):
             if header.text != 'Weekly Box Office':
                 date = header.text.replace(',', '')
 
-        file_name = get_data_file_directory() + 'WeeklyPeople_' + date + '.tsv'
+        file_name = create_data_file_path('WeeklyPeople_' + date + '.tsv')
         outfile = open(file_name, "w", newline='')
         writer = csv.writer(outfile, delimiter='\t')
         writer.writerows(data)
