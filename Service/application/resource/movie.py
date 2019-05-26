@@ -23,7 +23,20 @@ class Movie(Resource):
         if movie is None:
             abort(404, "Movie {0} doesn't exist.".format(id))
 
-        return movie_to_json(movie)
+        box_office_query = query.Query()
+        box_office_query.set_table("DomesticBoxOffice")
+        box_office_query.add_where_clause(condition.Condition('MovieId', '=', id))
+        cursor.execute(box_office_query.to_sql_query())
+        weeks = []
+        for record in cursor.fetchall():
+            week_number = int(record[0].replace(id, ''))
+            start_date = datetime.strftime(record[2], '%Y-%m-%d')
+            end_date = datetime.strftime(record[3], '%Y-%m-%d')
+            gross = int(record[4])
+            theater_count = int(record[5])
+            weeks.append([week_number, start_date, end_date, gross, theater_count])
+
+        return movie_to_json(movie, weeks)
 
 
 class Genres(Resource):
@@ -143,8 +156,9 @@ class SearchMoviesByPerson(Resource):
         return {'movies': [movie_to_json(movie) for movie in movies]}
 
 
-def movie_to_json(movie):
-    return {
+def movie_to_json(movie, weeks=None):
+
+    movie_json = {
         'id': movie[0],
         'name': movie[1],
         'studio': movie[2],
@@ -156,3 +170,19 @@ def movie_to_json(movie):
         'mpaaRating': movie[8],
         'productionBudget': movie[9]
     }
+
+    if weeks is not None:
+        weeks.sort(key=lambda w: w[0])
+        weeks_json = [
+            {
+                'weekNumber': week[0],
+                'startDate': week[1],
+                'endDate': week[2],
+                'gross': week[3],
+                'theaterCount': week[4]
+            } for week in weeks
+        ]
+        movie_json['weeks'] = weeks_json
+
+    return movie_json
+

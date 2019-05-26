@@ -11,7 +11,10 @@ def client():
 
 
 def test_get_movie(client):
-    assert client.get('/movie/ironman').status_code == 200
+    response = client.get('/movie/ironman')
+    assert response.status_code == 200
+    movie = json.loads(response.data)
+    verify_movie(movie)
 
 
 def test_get_non_existent_movie(client):
@@ -47,3 +50,23 @@ def test_get_movies_with_released_year(client):
         released_date = datetime.strptime(movie['releasedDate'], '%m/%d/%Y')
         assert released_date.year == 2017
 
+
+def verify_movie(movie):
+    assert movie
+    assert movie['id']
+    assert movie['name']
+    assert movie['studio']
+    assert movie['domesticGross']
+    assert movie['distributor']
+    assert movie['releasedDate']
+    assert movie['genre']
+    assert movie['runTime']
+    assert movie['mpaaRating']
+    assert movie['productionBudget']
+    if 'weeks' in movie:
+        for week in movie['weeks']:
+            assert week['weekNumber'] >= 0
+            assert week['startDate']
+            assert week['endDate']
+            assert week['gross'] >= 1
+            assert week['theaterCount'] >= 0
