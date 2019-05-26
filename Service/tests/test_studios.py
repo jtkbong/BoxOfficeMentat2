@@ -1,5 +1,5 @@
 import pytest
-
+import json
 from application import create_app
 
 
@@ -10,7 +10,10 @@ def client():
 
 
 def test_get_studio(client):
-    assert client.get('/studios/SonyColumbia').status_code == 200
+    response = client.get('/studios/warnerbros')
+    assert response.status_code == 200
+    studio = json.loads(response.data)
+    verify_studio(studio)
 
 
 def test_non_existent_studio(client):
@@ -18,4 +21,16 @@ def test_non_existent_studio(client):
 
 
 def test_get_studios(client):
-    assert client.get('/studios').status_code == 200
+    response = client.get('/studios')
+    assert response.status_code == 200
+    studios = json.loads(response.data)['studios']
+    for studio in studios:
+        verify_studio(studio)
+
+
+def verify_studio(studio):
+    assert studio is not None
+    assert studio['id']
+    assert studio['name']
+    if len(studio) == 3:
+        assert studio['count'] >= 0

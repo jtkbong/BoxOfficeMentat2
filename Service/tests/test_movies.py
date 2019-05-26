@@ -33,7 +33,7 @@ def test_get_ratings(client):
 
 
 def test_get_movies(client):
-    response = client.get('/movies?person=robertdowneyjr&studio=SonyColumbia')
+    response = client.get('/movies?person=robertdowneyjr&studio=sony')
     assert response.status_code == 200
     movies = json.loads(response.data)['movies']
     assert len(movies) > 0
