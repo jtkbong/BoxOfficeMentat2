@@ -1,4 +1,5 @@
 from scrapetasks.scrapetask import ExecutionMode
+from scrapetasks.completeStudiosScrapeTask import CompleteStudiosScrapeTask
 from scrapetasks.completeMovieScrapeTask import CompleteMovieScrapeTask
 from scrapetasks.completePeopleScrapeTask import CompletePeopleScrapeTask
 from scrapetasks.completeBoxOfficeScrapeTask import CompleteBoxOfficeScrapeTask
@@ -56,6 +57,8 @@ def create_task_from_config(task_name):
             return WeeklyPeopleScrapeTask(**params)
         elif task_name == "WeeklyCredits":
             return WeeklyCreditsScrapeTask(**params)
+        elif task_name == "CompleteStudios":
+            return CompleteStudiosScrapeTask(**params)
         elif task_name == "CompleteMovie":
             return CompleteMovieScrapeTask(**params)
         elif task_name == "CompletePeople":

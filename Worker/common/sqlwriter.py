@@ -21,12 +21,13 @@ def write_rows_to_db_retries(table_name, column_names, write_type, rows, ignore_
     for row in rows:
         num_tries = 0
         success = False
+        row_remove_new_line = row.replace('\n', '')
         while num_tries < maxTries and not success:
             try:
                 if write_type is WriteType.insert:
-                    insert_row_to_db(cursor, table_name, column_names, row)
+                    insert_row_to_db(cursor, table_name, column_names, row_remove_new_line)
                 elif write_type is WriteType.update:
-                    update_row_in_db(cursor, table_name, column_names, row)
+                    update_row_in_db(cursor, table_name, column_names, row_remove_new_line)
                 success = True
                 break
             except pymysql.err.IntegrityError:
@@ -34,7 +35,6 @@ def write_rows_to_db_retries(table_name, column_names, write_type, rows, ignore_
                     success = True
                     continue
                 else:
-                    row_remove_new_line = row.replace('\n', '')
                     logging.log_error(
                         'Integrity Error: %s, [%s]\n' % (table_name, ','.join(row_remove_new_line.split('\t'))))
                     break
@@ -43,7 +43,6 @@ def write_rows_to_db_retries(table_name, column_names, write_type, rows, ignore_
                 num_tries += 1
                 continue
         if num_tries == maxTries and not success:
-            row_remove_new_line = row.replace('\n', '')
             logging.log_error(
                 'Max Tries Reached: %s, [%s]\n' % (table_name, ','.join(row_remove_new_line.split('\t'))))
     connection.commit()

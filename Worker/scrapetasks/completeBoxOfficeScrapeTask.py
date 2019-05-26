@@ -17,7 +17,7 @@ class CompleteBoxOfficeScrapeTask(ScrapeTask):
     def scrape(self):
         movies = self.get_movie_list()
         for studio, movies in movies.items():
-            file_name = datafile.get_data_file_directory() + 'BoxOfficeGrossComplete_' + studio + '.tsv'
+            file_name = datafile.create_data_file_path('BoxOfficeGrossComplete_' + studio + '.tsv')
             if not datafile.is_data_file_complete(file_name):
                 studio_data = []
                 for movie in movies:

@@ -9,7 +9,7 @@ class CompleteCreditsScrapeTask(ScrapeTask):
 
     def scrape(self):
 
-        file_name = datafile.get_data_file_directory() + 'Credits.tsv'
+        file_name = datafile.create_data_file_path('Credits.tsv')
         outfile = open(file_name, "w", newline='')
         writer = csv.writer(outfile, delimiter='\t')
 

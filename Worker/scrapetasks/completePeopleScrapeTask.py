@@ -13,7 +13,7 @@ class CompletePeopleScrapeTask(ScrapeTask):
         self.scrape_people('Producer')
         self.scrape_people('Writer')
         
-        file_name = get_data_file_directory() + 'People.tsv'
+        file_name = create_data_file_path('People.tsv')
         outfile = open(file_name, "w", newline='')
         writer = csv.writer(outfile, delimiter='\t')
         for person_id, person_data in self.people.items():

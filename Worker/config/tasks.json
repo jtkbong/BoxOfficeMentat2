@@ -78,8 +78,21 @@
     "enabled": true
   },
 
-  "CompleteMovie": {
+  "CompleteStudios": {
     "order": 0,
+    "tableName": "Studios",
+    "tableColumns": [
+        "Id",
+        "Name"
+    ],
+    "writeType": "insert",
+    "executionMode": "completeRewrite",
+    "ignoreIntegrityErrors": true,
+    "enabled": true
+  },
+
+  "CompleteMovie": {
+    "order": 1,
     "tableName": "Movies",
     "tableColumns": [
         "Id",
@@ -99,7 +112,7 @@
   },
 
   "CompletePeople": {
-    "order": 1,
+    "order": 2,
     "tableName": "People",
     "tableColumns": [
         "Id",
@@ -115,7 +128,7 @@
   },
 
   "CompleteCredits": {
-    "order": 2,
+    "order": 3,
     "tableName": "Credits",
     "tableColumns": [
       "MovieId",
@@ -128,7 +141,7 @@
   },
 
   "CompleteBoxOffice": {
-    "order": 3,
+    "order": 4,
     "tableName": "DomesticBoxOffice",
     "tableColumns": [
       "Id",

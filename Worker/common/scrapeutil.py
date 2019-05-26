@@ -101,8 +101,10 @@ def get_studios_list():
             for row in table.findAll('tr'):
                 for cell in row.findAll('a'):
                     href = cell.get('href')
-                    studio_name = parsingutil.get_studio_from_url(href)
-                    studios.append({'studio_name': studio_name, 'href': href})
+                    studio_name = cell.text
+                    studio_id = parsingutil.get_studio_from_url(href)
+                    if not (studio_id is None or studio_id == '' or studio_name is None or studio_name == ''):
+                        studios.append({'studio_id': studio_id, 'studio_name': studio_name, 'href': href})
         datacache.set_list('Studios', studios)
         studios = datacache.get_list('Studios')
     return studios
