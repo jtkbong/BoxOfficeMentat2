@@ -36,7 +36,14 @@ class Movie(Resource):
             theater_count = int(record[5])
             weeks.append([week_number, start_date, end_date, gross, theater_count])
 
-        return movie_to_json(movie, weeks)
+        studio_name_query = query.Query()
+        studio_name_query.set_table("Studios")
+        studio_name_query.add_where_clause(condition.Condition('Id', '=', movie[2]))
+        studio_name_query.set_return_columns(['Name'])
+        cursor.execute(studio_name_query.to_sql_query())
+        studio_name = cursor.fetchone()[0]
+
+        return movie_to_json(movie, weeks, studio_name)
 
 
 class Genres(Resource):
@@ -156,7 +163,7 @@ class SearchMoviesByPerson(Resource):
         return {'movies': [movie_to_json(movie) for movie in movies]}
 
 
-def movie_to_json(movie, weeks=None):
+def movie_to_json(movie, weeks=None, studio_name=None):
 
     movie_json = {
         'id': movie[0],
@@ -183,6 +190,9 @@ def movie_to_json(movie, weeks=None):
             } for week in weeks
         ]
         movie_json['weeks'] = weeks_json
+
+    if studio_name is not None:
+        movie_json['studio'] = studio_name
 
     return movie_json
 
