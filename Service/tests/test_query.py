@@ -142,10 +142,11 @@ def test_inner_join_query():
     query.add_inner_join('Studio', 'Studios', 'Id')
     query.add_aggregate_column(AggregateType.COUNT, 'Movies.Id', True)
     query.set_order_by_columns(['COUNT'])
+    query.set_results_order("DESC")
     query.set_results_offset(80)
     query.set_max_results(20)
     cmd = query.to_sql_query()
     assert cmd == "SELECT Studios.Name,COUNT(DISTINCT Movies.Id) AS COUNT FROM boxofficementat.Movies " \
                   "INNER JOIN boxofficementat.Studios ON boxofficementat.Movies.Studio=boxofficementat.Studios.Id  " \
-                  "GROUP BY Studios.Name ORDER BY COUNT LIMIT 80, 20"
+                  "GROUP BY Studios.Name ORDER BY COUNT DESC LIMIT 80, 20"
 

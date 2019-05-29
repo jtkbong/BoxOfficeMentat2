@@ -28,6 +28,13 @@ def test_get_studios(client):
         verify_studio(studio)
 
 
+def test_get_studios_max_results(client):
+    response = client.get('/studios?maxResults=20')
+    assert response.status_code == 200
+    studios = json.loads(response.data)['studios']
+    assert len(studios) == 20
+
+
 def verify_studio(studio):
     assert studio is not None
     assert studio['id']
