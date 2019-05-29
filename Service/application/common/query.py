@@ -11,6 +11,19 @@ class AggregateType(Enum):
     MAX = 5
 
 
+class InnerJoin:
+
+    def __init__(self, self_table, self_column, join_table, join_column):
+        self.selfTable = self_table
+        self.selfColumn = self_column
+        self.joinTable = join_table
+        self.joinColumn = join_column
+
+    def get_join_condition_sql(self):
+        return " INNER JOIN boxofficementat.%s ON boxofficementat.%s.%s=boxofficementat.%s.%s " % \
+               (self.joinTable, self.selfTable, self.selfColumn, self.joinTable, self.joinColumn)
+
+
 class Query:
     
     DefaultNumResults = 100
@@ -24,6 +37,7 @@ class Query:
         self.columns = []
         self.aggregateColumns = []
         self.whereClauses = []
+        self.innerJoins = []
         self.subQueries = []
         self.orderByColumns = []
         self.innerQuery = None
@@ -44,10 +58,11 @@ class Query:
     def set_order_by_columns(self, columns):
         self.orderByColumns = columns
 
-    def add_aggregate_column(self, aggregate_type, column):
+    def add_aggregate_column(self, aggregate_type, column='*', use_distinct=False):
         self.aggregateColumns.append({
             'aggregate_type': aggregate_type,
-            'column': column
+            'column': column,
+            'use_distinct': use_distinct
         })
                 
     def set_results_order(self, results_order):
@@ -56,9 +71,12 @@ class Query:
     def set_max_results(self, max_results):
         self.maxResults = max_results
 
-    def set_results_offet(self, results_offet):
+    def set_results_offset(self, results_offet):
         self.resultsOffset = results_offet
-                
+
+    def add_inner_join(self, self_column, join_table, join_column):
+        self.innerJoins.append(InnerJoin(self.table, self_column, join_table, join_column))
+
     def add_subquery(self, column, subquery):
         self.subQueries.append([column, subquery])
     
@@ -78,17 +96,21 @@ class Query:
 
         if len(self.aggregateColumns) > 0:
             for aggregate_column in self.aggregateColumns:
-                query = query + "," + ("%s(%s) AS %s" %
+                query = query + "," + ("%s(%s %s) AS %s" %
                                        (aggregate_column['aggregate_type'].name,
+                                        'DISTINCT' if aggregate_column['use_distinct'] else '',
                                         aggregate_column['column'],
                                         aggregate_column['aggregate_type'].name))
 
         query = query + " FROM boxofficementat.%s" % self.table
+
+        if len(self.innerJoins) > 0:
+            for inner_join in self.innerJoins:
+                query = query + inner_join.get_join_condition_sql()
         
         if len(self.whereClauses) > 0 or len(self.subQueries) > 0:
-        
             query = query + " WHERE "
-        
+
             if len(self.whereClauses) > 0:
                 where_clauses_sql = []
                 for whereClause in self.whereClauses:

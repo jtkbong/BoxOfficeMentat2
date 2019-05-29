@@ -1,5 +1,7 @@
 import pytest
 from application.common.query import Query
+from application.common.query import AggregateType
+from application.common.query import InnerJoin
 from application.common.condition import Condition
 
 
@@ -71,7 +73,7 @@ def test_query_max_results():
 def test_query_results_offset():
     query = Query()
     query.set_table("Movies")
-    query.set_results_offet(200)
+    query.set_results_offset(200)
     cmd = query.to_sql_query()
 
     assert cmd == "SELECT * FROM boxofficementat.Movies LIMIT 200, 100"
@@ -80,7 +82,7 @@ def test_query_results_offset():
 def test_query_max_results_and_offset():
     query = Query()
     query.set_table("Movies")
-    query.set_results_offet(200)
+    query.set_results_offset(200)
     query.set_max_results(300)
     cmd = query.to_sql_query()
 
@@ -123,3 +125,27 @@ def test_subqueries():
                   "WHERE PersonId = 'chrisevans' AND Relationship = 'Actor') " \
                   "AND Id IN (SELECT MovieId FROM boxofficementat.Credits " \
                   "WHERE PersonId = 'chrishemsworth' AND Relationship = 'Actor') LIMIT 0, 100"
+
+
+def test_inner_join_creation():
+    inner_join = InnerJoin('Studios', 'Id', 'Movies', 'Studio')
+    sql_condition = inner_join.get_join_condition_sql()
+    assert sql_condition == " INNER JOIN boxofficementat.Movies ON " \
+                            "boxofficementat.Studios.Id=boxofficementat.Movies.Studio "
+
+
+def test_inner_join_query():
+
+    query = Query()
+    query.set_table("Movies")
+    query.set_return_columns(["Studios.Name"])
+    query.add_inner_join('Studio', 'Studios', 'Id')
+    query.add_aggregate_column(AggregateType.COUNT, 'Movies.Id', True)
+    query.set_order_by_columns(['COUNT'])
+    query.set_results_offset(80)
+    query.set_max_results(20)
+    cmd = query.to_sql_query()
+    assert cmd == "SELECT Studios.Name,COUNT(DISTINCT Movies.Id) AS COUNT FROM boxofficementat.Movies " \
+                  "INNER JOIN boxofficementat.Studios ON boxofficementat.Movies.Studio=boxofficementat.Studios.Id  " \
+                  "GROUP BY Studios.Name ORDER BY COUNT LIMIT 80, 20"
+
