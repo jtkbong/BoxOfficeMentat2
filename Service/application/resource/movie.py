@@ -140,8 +140,8 @@ class Movies(Resource):
             if offset is not None:
                 movies_query.set_results_offset(offset)
 
-        command = movies_query.to_sql_query(False)
-        print(command)
+        include_limit = False if mode == 'count' else True
+        command = movies_query.to_sql_query(include_limit)
         cursor.execute(command)
 
         if mode == 'count':
