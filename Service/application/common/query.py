@@ -96,7 +96,7 @@ class Query:
                 query = query + "DISTINCT "
             query = query + ",".join(self.columns)
         else:
-            if self.mode != 'count':
+            if self.mode != 'count' and self.mode != 'max':
                 query = query + "*"
 
         if len(self.aggregateColumns) > 0:
