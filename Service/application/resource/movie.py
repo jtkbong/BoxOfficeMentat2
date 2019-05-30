@@ -129,6 +129,10 @@ class Movies(Resource):
         if max_results is not None:
             movies_query.set_max_results(max_results)
 
+        offset = request.args.get('offset')
+        if offset is not None:
+            movies_query.set_results_offset(offset)
+
         command = movies_query.to_sql_query()
         cursor.execute(command)
 
