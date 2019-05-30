@@ -2,6 +2,7 @@ from flask import request
 from flask_restful import Resource
 from werkzeug.exceptions import abort
 from application.common import query
+from application.common.query import AggregateType
 from application.common import condition
 from application.common import sqlhelper
 from datetime import datetime
@@ -125,19 +126,30 @@ class Movies(Resource):
             subquery.add_where_clause(condition.Condition("PersonId", "=", person))
             movies_query.add_subquery("Id", subquery)
 
-        max_results = request.args.get('maxResults')
-        if max_results is not None:
-            movies_query.set_max_results(max_results)
+        mode = request.args.get('mode')
+        if mode is not None and mode != 'results':
+            movies_query.set_mode(mode)
+            if mode == 'count':
+                movies_query.add_aggregate_column(AggregateType.COUNT, 'Id', True)
+        else:
+            max_results = request.args.get('maxResults')
+            if max_results is not None:
+                movies_query.set_max_results(max_results)
 
-        offset = request.args.get('offset')
-        if offset is not None:
-            movies_query.set_results_offset(offset)
+            offset = request.args.get('offset')
+            if offset is not None:
+                movies_query.set_results_offset(offset)
 
-        command = movies_query.to_sql_query()
+        command = movies_query.to_sql_query(False)
+        print(command)
         cursor.execute(command)
 
-        movies = cursor.fetchall()
-        return {'movies': [movie_to_json(movie) for movie in movies]}
+        if mode == 'count':
+            count = cursor.fetchone()
+            return {'count': count[0]}
+        else:
+            movies = cursor.fetchall()
+            return {'movies': [movie_to_json(movie) for movie in movies]}
 
 
 class SearchMoviesByPerson(Resource):

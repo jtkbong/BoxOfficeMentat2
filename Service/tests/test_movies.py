@@ -51,6 +51,13 @@ def test_get_movies_with_released_year(client):
         assert released_date.year == 2017
 
 
+def test_count_movies_from_studio(client):
+    response = client.get('/movies?studio=sony&mode=count')
+    assert response.status_code == 200
+    count = json.loads(response.data)['count']
+    assert count >= 900
+
+
 def verify_movie(movie):
     assert movie
     assert movie['id']

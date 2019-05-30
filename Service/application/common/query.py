@@ -42,6 +42,7 @@ class Query:
         self.orderByColumns = []
         self.innerQuery = None
         self.resultsOffset = 0
+        self.mode = None
         
     def set_table(self, table):
         self.table = table
@@ -74,6 +75,9 @@ class Query:
     def set_results_offset(self, results_offet):
         self.resultsOffset = results_offet
 
+    def set_mode(self, mode):
+        self.mode = mode
+
     def add_inner_join(self, self_column, join_table, join_column):
         self.innerJoins.append(InnerJoin(self.table, self_column, join_table, join_column))
 
@@ -92,11 +96,14 @@ class Query:
                 query = query + "DISTINCT "
             query = query + ",".join(self.columns)
         else:
-            query = query + "*"
+            if self.mode != 'count':
+                query = query + "*"
 
         if len(self.aggregateColumns) > 0:
+            if len(self.columns) > 0:
+                query = query + ","
             for aggregate_column in self.aggregateColumns:
-                query = query + "," + ("%s(%s %s) AS %s" %
+                query = query + ("%s(%s %s) AS %s" %
                                        (aggregate_column['aggregate_type'].name,
                                         'DISTINCT' if aggregate_column['use_distinct'] else '',
                                         aggregate_column['column'],
@@ -125,7 +132,7 @@ class Query:
                     query = query + " AND "
                 query = query + " AND ".join(sub_queries_sql)
 
-        if len(self.aggregateColumns) > 0:
+        if len(self.aggregateColumns) > 0 and len(self.columns) > 0:
             query = query + " GROUP BY " + ",".join(self.columns)
 
         if len(self.orderByColumns) > 0:
