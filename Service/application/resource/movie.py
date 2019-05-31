@@ -152,33 +152,6 @@ class Movies(Resource):
             return {'movies': [movie_to_json(movie) for movie in movies]}
 
 
-class SearchMoviesByPerson(Resource):
-
-    def get(self):
-        person_id = request.args.get('id')
-        relationship_type = request.args.get('relationshipType')
-
-        connection = sqlhelper.get_sql_conn()
-        cursor = connection.cursor()
-
-        search_query = query.Query()
-        search_query.set_table("Movies")
-
-        subquery = query.Query()
-        subquery.set_table("Credits")
-        subquery.set_return_columns(["MovieId"])
-        subquery.add_where_clause(condition.Condition("PersonId", "=", person_id))
-        subquery.add_where_clause(condition.Condition("Relationship", "=", relationship_type))
-
-        search_query.add_subquery("Id", subquery)
-
-        command = search_query.to_sql_query()
-        cursor.execute(command)
-
-        movies = cursor.fetchall()
-        return {'movies': [movie_to_json(movie) for movie in movies]}
-
-
 def movie_to_json(movie, weeks=None, studio_name=None):
 
     movie_json = {
