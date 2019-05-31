@@ -11,29 +11,21 @@ class Credits(Resource):
         cursor = connection.cursor()
 
         credits_query = query.Query()
-        credits_query.set_table("People")
-
-        subquery = query.Query()
-        subquery.set_table("Credits")
-        subquery.set_return_columns(["PersonId"])
-        subquery.add_where_clause(condition.Condition("MovieId", "=", movie_id))
-        subquery.add_where_clause(condition.Condition("Relationship", "=", "Actor"))
-
-        credits_query.add_subquery("Id", subquery)
+        credits_query.set_table("Credits")
+        credits_query.set_return_columns(["PersonId", "People.Name", "Relationship"])
+        credits_query.add_inner_join("PersonId", "People", "Id")
+        credits_query.add_where_clause(condition.Condition("MovieId", "=", movie_id))
 
         command = credits_query.to_sql_query()
         cursor.execute(command)
 
-        people = cursor.fetchall()
-        return {'people': [person_to_json(person) for person in people]}
+        credits = cursor.fetchall()
+        return {'credits': [credit_to_json(credit) for credit in credits]}
 
 
-def person_to_json(person):
+def credit_to_json(credit):
     return {
-        'id': person[0],
-        'name': person[1],
-        'actor': person[2],
-        'director': person[3],
-        'producer': person[4],
-        'screenWriter': person[5]
+        'personId': credit[0],
+        'name': credit[1],
+        'relationship': credit[2]
         }
