@@ -22,6 +22,7 @@ def verify_boxoffice_record(record):
     assert record is not None
     assert record['id'] is not None
     assert record['movieId'] is not None
+    assert record['movieName'] is not None
     assert record['startDate'] is not None
     assert record['endDate'] is not None
     assert record['gross'] > 0

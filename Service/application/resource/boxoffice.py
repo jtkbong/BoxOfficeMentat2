@@ -12,6 +12,8 @@ class Latest(Resource):
         cursor = connection.cursor()
         latest_query = query.Query()
         latest_query.set_table('DomesticBoxOffice')
+        latest_query.add_inner_join('MovieId', 'Movies', 'Id')
+        latest_query.set_return_columns(['DomesticBoxOffice.Id', 'MovieId', 'Movies.Name', 'StartDate', 'EndDate', 'Gross', 'TheaterCount'])
 
         last_week_query = query.Query()
         last_week_query.set_table('DomesticBoxOffice')
@@ -31,8 +33,9 @@ def record_to_json(record):
     return {
         'id': record[0],
         'movieId': record[1],
-        'startDate': record[2].strftime("%Y-%m-%d"),
-        'endDate': record[3].strftime("%Y-%m-%d"),
-        'gross': record[4],
-        'theaterCount': record[5]
+        'movieName': record[2],
+        'startDate': record[3].strftime("%m-%d-%Y"),
+        'endDate': record[4].strftime("%m-%d-%Y"),
+        'gross': record[5],
+        'theaterCount': record[6]
     }
