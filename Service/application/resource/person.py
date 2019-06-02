@@ -25,6 +25,12 @@ class Person(Resource):
 
 class SearchPeople(Resource):
     def get(self):
+
+        offset = request.args.get('offset')
+        offset = 0 if offset is None else offset
+        max_results = request.args.get('maxResults')
+        max_results = 2000 if max_results is None else max_results
+
         name = request.args.get('name')
         connection = sqlhelper.get_sql_conn()
         cursor = connection.cursor()
@@ -32,6 +38,10 @@ class SearchPeople(Resource):
         search_query = query.Query()
         search_query.set_table("People")
         search_query.add_where_clause(condition.Condition("Name", "LIKE", "%" + name + "%"))
+
+        search_query.set_results_offset(offset)
+        search_query.set_order_by_columns(["Name"])
+        search_query.set_max_results(max_results)
 
         command = search_query.to_sql_query()
         cursor.execute(command)
