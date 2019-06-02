@@ -32,11 +32,12 @@ class Movie(Resource):
         weeks = []
         for record in cursor.fetchall():
             week_number = int(record[0].replace(id, ''))
-            start_date = datetime.strftime(record[2], '%Y-%m-%d')
-            end_date = datetime.strftime(record[3], '%Y-%m-%d')
-            gross = int(record[4])
-            theater_count = int(record[5])
-            weeks.append([week_number, start_date, end_date, gross, theater_count])
+            if week_number != 0:
+                start_date = datetime.strftime(record[2], '%Y-%m-%d')
+                end_date = datetime.strftime(record[3], '%Y-%m-%d')
+                gross = int(record[4])
+                theater_count = int(record[5])
+                weeks.append([week_number, start_date, end_date, gross, theater_count])
 
         studio_name_query = query.Query()
         studio_name_query.set_table("Studios")
