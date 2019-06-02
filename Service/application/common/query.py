@@ -2,6 +2,12 @@ import uuid
 from enum import Enum
 
 
+class ResultsOrder(Enum):
+
+    ASC = 1
+    DESC = 2
+
+
 class AggregateType(Enum):
 
     COUNT = 1
@@ -88,59 +94,85 @@ class Query:
         
         if self.table is None:
             raise ValueError("Table not set for query.")
-        
-        query = "SELECT "
-        
-        if len(self.columns) > 0:
-            if self.uniqueResults is True:
-                query = query + "DISTINCT "
-            query = query + ",".join(self.columns)
-        else:
-            if self.mode != 'count' and self.mode != 'max':
-                query = query + "*"
 
-        if len(self.aggregateColumns) > 0:
+        query = ''
+
+        def get_select_columns(query):
+            query = query + "SELECT "
+
             if len(self.columns) > 0:
-                query = query + ","
-            for aggregate_column in self.aggregateColumns:
-                query = query + ("%s(%s %s) AS %s" %
-                                       (aggregate_column['aggregate_type'].name,
-                                        'DISTINCT' if aggregate_column['use_distinct'] else '',
-                                        aggregate_column['column'],
-                                        aggregate_column['aggregate_type'].name))
+                if self.uniqueResults is True:
+                    query = query + "DISTINCT "
+                query = query + ",".join(self.columns)
+            else:
+                if self.mode != 'count' and self.mode != 'max':
+                    query = query + "*"
+            return query
+        query = get_select_columns(query)
 
-        query = query + " FROM boxofficementat.%s" % self.table
+        def get_aggregate_return_columns(query):
+            if len(self.aggregateColumns) > 0:
+                if len(self.columns) > 0:
+                    query = query + ","
+                for aggregate_column in self.aggregateColumns:
+                    query = query + ("%s(%s %s) AS %s" %
+                                           (aggregate_column['aggregate_type'].name,
+                                            'DISTINCT' if aggregate_column['use_distinct'] else '',
+                                            aggregate_column['column'],
+                                            aggregate_column['aggregate_type'].name))
+            return query
+        query = get_aggregate_return_columns(query)
 
-        if len(self.innerJoins) > 0:
-            for inner_join in self.innerJoins:
-                query = query + inner_join.get_join_condition_sql()
-        
-        if len(self.whereClauses) > 0 or len(self.subQueries) > 0:
-            query = query + " WHERE "
+        def add_table(query):
+            query = query + " FROM boxofficementat.%s" % self.table
+            return query
+        query = add_table(query)
 
-            if len(self.whereClauses) > 0:
-                where_clauses_sql = []
-                for whereClause in self.whereClauses:
-                    where_clauses_sql.append(whereClause.to_sql_condition())
-                query = query + " AND ".join(where_clauses_sql)
-            
-            if len(self.subQueries) > 0:
-                sub_queries_sql = []
-                for column, subQuery in self.subQueries:
-                    sub_queries_sql.append(column + " IN (" + subQuery.to_sql_query(False) + ")")
+        def add_inner_joins(query):
+            if len(self.innerJoins) > 0:
+                for inner_join in self.innerJoins:
+                    query = query + inner_join.get_join_condition_sql()
+            return query
+        query = add_inner_joins(query)
+
+        def add_where_clauses(query):
+            if len(self.whereClauses) > 0 or len(self.subQueries) > 0:
+                query = query + " WHERE "
+
                 if len(self.whereClauses) > 0:
-                    query = query + " AND "
-                query = query + " AND ".join(sub_queries_sql)
+                    where_clauses_sql = []
+                    for whereClause in self.whereClauses:
+                        where_clauses_sql.append(whereClause.to_sql_condition())
+                    query = query + " AND ".join(where_clauses_sql)
 
-        if len(self.aggregateColumns) > 0 and len(self.columns) > 0:
-            query = query + " GROUP BY " + ",".join(self.columns)
+                if len(self.subQueries) > 0:
+                    sub_queries_sql = []
+                    for column, subQuery in self.subQueries:
+                        sub_queries_sql.append(column + " IN (" + subQuery.to_sql_query(False) + ")")
+                    if len(self.whereClauses) > 0:
+                        query = query + " AND "
+                    query = query + " AND ".join(sub_queries_sql)
+            return query
+        query = add_where_clauses(query)
 
-        if len(self.orderByColumns) > 0:
-            query = query + " ORDER BY " + ",".join(self.orderByColumns)
-            if self.resultsOrder is not None:
-                query = query + " " + self.resultsOrder
+        def add_group_by(query):
+            if len(self.aggregateColumns) > 0 and len(self.columns) > 0:
+                query = query + " GROUP BY " + ",".join(self.columns)
+            return query
+        query = add_group_by(query)
 
-        if include_limit:
-            query = query + " LIMIT %d, %d" % (int(self.resultsOffset), int(self.maxResults))
+        def add_order_by_columns(query):
+            if len(self.orderByColumns) > 0:
+                query = query + " ORDER BY " + ",".join(self.orderByColumns)
+                if self.resultsOrder is not None:
+                    query = query + " " + self.resultsOrder.name
+            return query
+        query = add_order_by_columns(query)
+
+        def add_limit(query):
+            if include_limit:
+                query = query + " LIMIT %d, %d" % (int(self.resultsOffset), int(self.maxResults))
+            return query
+        query = add_limit(query)
 
         return query

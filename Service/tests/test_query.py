@@ -1,6 +1,7 @@
 import pytest
 from application.common.query import Query
 from application.common.query import AggregateType
+from application.common.query import ResultsOrder
 from application.common.query import InnerJoin
 from application.common.condition import Condition
 
@@ -94,7 +95,7 @@ def test_query_order_by_and_results_order():
     query.set_table("Movies")
     query.set_return_columns(["Name", "Studio"])
     query.set_order_by_columns(["Studio"])
-    query.set_results_order("DESC")
+    query.set_results_order(ResultsOrder.DESC)
     cmd = query.to_sql_query()
 
     assert cmd == "SELECT Name,Studio FROM boxofficementat.Movies ORDER BY Studio DESC LIMIT 0, 100"
@@ -142,7 +143,7 @@ def test_inner_join_query():
     query.add_inner_join('Studio', 'Studios', 'Id')
     query.add_aggregate_column(AggregateType.COUNT, 'Movies.Id', True)
     query.set_order_by_columns(['COUNT'])
-    query.set_results_order("DESC")
+    query.set_results_order(ResultsOrder.DESC)
     query.set_results_offset(80)
     query.set_max_results(20)
     cmd = query.to_sql_query()

@@ -41,7 +41,7 @@ class Studios(Resource):
         studios_query.add_inner_join('Studio', 'Studios', 'Id')
         studios_query.add_aggregate_column(query.AggregateType.COUNT, 'Movies.Id', True)
         studios_query.set_order_by_columns(['COUNT'])
-        studios_query.set_results_order("DESC")
+        studios_query.set_results_order(query.ResultsOrder.DESC)
         studios_query.set_results_offset(offset)
         studios_query.set_max_results(max_results)
         cursor.execute(studios_query.to_sql_query())

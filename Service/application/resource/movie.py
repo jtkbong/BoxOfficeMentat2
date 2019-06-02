@@ -3,6 +3,7 @@ from flask_restful import Resource
 from werkzeug.exceptions import abort
 from application.common import query
 from application.common.query import AggregateType
+from application.common.query import ResultsOrder
 from application.common import condition
 from application.common import sqlhelper
 from datetime import datetime
@@ -141,6 +142,7 @@ class Movies(Resource):
                 movies_query.set_results_offset(offset)
 
         movies_query.set_order_by_columns(['DomesticGross'])
+        movies_query.set_results_order(ResultsOrder.DESC)
 
         include_limit = False if mode == 'count' else True
         command = movies_query.to_sql_query(include_limit)
