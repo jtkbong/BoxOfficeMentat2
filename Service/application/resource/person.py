@@ -2,6 +2,7 @@ from flask import request
 from flask_restful import Resource
 from werkzeug.exceptions import abort
 from application.common import query
+from application.common.query import AggregateType
 from application.common import condition
 from application.common import sqlhelper
 
@@ -39,15 +40,32 @@ class SearchPeople(Resource):
         search_query.set_table("People")
         search_query.add_where_clause(condition.Condition("Name", "LIKE", "%" + name + "%"))
 
-        search_query.set_results_offset(offset)
-        search_query.set_order_by_columns(["Name"])
-        search_query.set_max_results(max_results)
+        mode = request.args.get('mode')
+        if mode is not None and mode != 'results':
+            search_query.set_mode(mode)
+            if mode == 'count':
+                search_query.add_aggregate_column(AggregateType.COUNT, 'Id', True)
+        else:
+            max_results = request.args.get('maxResults')
+            if max_results is not None:
+                search_query.set_max_results(max_results)
 
-        command = search_query.to_sql_query()
+            offset = request.args.get('offset')
+            if offset is not None:
+                search_query.set_results_offset(offset)
+
+        search_query.set_order_by_columns(["Name"])
+
+        include_limit = False if mode == 'count' else True
+        command = search_query.to_sql_query(include_limit)
         cursor.execute(command)
 
-        people = cursor.fetchall()
-        return {'people': [person_to_json(person) for person in people]}
+        if mode == 'count':
+            count = cursor.fetchone()
+            return {'count': count[0]}
+        else:
+            people = cursor.fetchall()
+            return {'people': [person_to_json(person) for person in people]}
 
 
 def person_to_json(person):

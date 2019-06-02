@@ -29,6 +29,13 @@ def test_search_chris(client):
         verify_person(person)
 
 
+def test_count_people(client):
+    response = client.get('/people?name=chris&mode=count')
+    assert response.status_code == 200
+    count = json.loads(response.data)['count']
+    assert count > 0
+
+
 def verify_person(person):
     assert person is not None
     assert person['id']
