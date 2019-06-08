@@ -30,7 +30,7 @@ class WeeklyGrossScrapeTask(ScrapeTask):
                     theater_count = text_to_int(theater_count_cell.text)
                     week_number_cell = cells[-1]
                     week_number = text_to_int(week_number_cell.text)
-                    record_id = movie_id + str(week_number)
+                    record_id = movie_id + '_' + str(week_number)
                     data.append([record_id, movie_id, dates[0], dates[1], weekly_gross, theater_count])
 
         date = ''

@@ -88,7 +88,7 @@ class CompleteBoxOfficeScrapeTask(ScrapeTask):
                 week_number_cell = cells[-1]
                 week_number = parsingutil.text_to_int(week_number_cell.text)
 
-                record_id = movie_id + str(week_number)
+                record_id = movie_id + '_' + str(week_number)
                 movie_rows.append([record_id, movie_id, start_date, end_date, gross, theater_count])
 
         return movie_rows

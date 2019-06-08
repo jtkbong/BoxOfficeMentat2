@@ -31,7 +31,7 @@ class Movie(Resource):
         cursor.execute(box_office_query.to_sql_query())
         weeks = []
         for record in cursor.fetchall():
-            week_number = int(record[0].replace(id, ''))
+            week_number = int(record[0][record[0].index('_') + 1])
             if week_number != 0:
                 start_date = datetime.strftime(record[2], '%Y-%m-%d')
                 end_date = datetime.strftime(record[3], '%Y-%m-%d')
