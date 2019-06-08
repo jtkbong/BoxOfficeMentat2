@@ -23,15 +23,15 @@ class WeeklyGrossScrapeTask(ScrapeTask):
                 movie_name_cell = row.find('a')
                 href = movie_name_cell.get('href')
                 movie_id = get_id_from_url(href)
-                weekly_gross_cell = cells[4]
-                weekly_gross = dollar_text_to_int(weekly_gross_cell.text)
-                theater_count_cell = cells[6]
-                theater_count = text_to_int(theater_count_cell.text)
-                week_number_cell = cells[-1]
-                week_number = text_to_int(week_number_cell.text)
-
-                record_id = movie_id + str(week_number)
-                data.append([record_id, movie_id, dates[0], dates[1], weekly_gross, theater_count])
+                if movie_id is not None:
+                    weekly_gross_cell = cells[4]
+                    weekly_gross = dollar_text_to_int(weekly_gross_cell.text)
+                    theater_count_cell = cells[6]
+                    theater_count = text_to_int(theater_count_cell.text)
+                    week_number_cell = cells[-1]
+                    week_number = text_to_int(week_number_cell.text)
+                    record_id = movie_id + str(week_number)
+                    data.append([record_id, movie_id, dates[0], dates[1], weekly_gross, theater_count])
 
         date = ''
         headers = scrape_elements('h2', url, None)

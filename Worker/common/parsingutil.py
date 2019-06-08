@@ -36,7 +36,7 @@ def production_budget_to_int(text):
 
 
 def get_id_from_url(url):
-    if url is None or 'id=' not in url:
+    if url is None or 'id=' not in url or '.htm' not in url:
         return None
     return url[url.index('id=') + 3: url.index('.htm')]
 
