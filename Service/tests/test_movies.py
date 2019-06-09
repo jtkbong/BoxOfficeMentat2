@@ -70,9 +70,12 @@ def verify_movie(movie):
     assert movie['runTime']
     assert movie['mpaaRating']
     assert movie['productionBudget']
+    weeks_so_far = []
     if 'weeks' in movie:
         for week in movie['weeks']:
             assert week['weekNumber'] >= 0
+            assert week['weekNumber'] not in weeks_so_far
+            weeks_so_far.append(week['weekNumber'])
             assert week['startDate']
             assert week['endDate']
             assert week['gross'] >= 1

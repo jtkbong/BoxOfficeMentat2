@@ -30,7 +30,7 @@ class Latest(Resource):
 
 
 def record_to_json(record):
-    week_number = int(record[0][record[0].index('_') + 1])
+    week_number = int(record[0][record[0].index('_') + 1:])
     return {
         'id': record[0],
         'movieId': record[1],
