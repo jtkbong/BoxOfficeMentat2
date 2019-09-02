@@ -5,6 +5,7 @@ from application.resource import movie
 from application.resource import person
 from application.resource import credit
 from application.resource import boxoffice
+from application.resource import review
 
 
 def index():
@@ -29,6 +30,9 @@ def create_app():
     api.add_resource(credit.Credits, '/credits/<movie_id>')
 
     api.add_resource(boxoffice.Latest, '/boxoffice/latest')
+
+    api.add_resource(review.Review, '/review/<id>')
+    api.add_resource(review.Reviews, '/reviews')
 
     app.add_url_rule('/', 'index', index)
 
