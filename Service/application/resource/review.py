@@ -15,8 +15,9 @@ class Review(Resource):
         review_query = query.Query()
         review_query.set_table("Reviews")
         review_query.set_unique_results(True)
-        review_query.set_return_columns(["Id", "MovieId", "DateTime", "ReviewText", "ReviewStats"])
-        review_query.add_where_clause(condition.Condition('Id', '=', id))
+        review_query.set_return_columns(["Reviews.Id", "MovieId", "Movies.Name", "DateTime", "ReviewText", "ReviewStats"])
+        review_query.add_inner_join('MovieId', 'Movies', 'Id')
+        review_query.add_where_clause(condition.Condition('Reviews.Id', '=', id))
         cursor.execute(review_query.to_sql_query())
         review = cursor.fetchone()
 
@@ -71,9 +72,10 @@ def review_to_json(review):
     return {
         'id': review[0],
         'movieId': review[1],
-        'dateTime': review[2].strftime("%Y-%m-%d"),
-        'reviewText': review[3].decode('utf-8'),
-        'reviewStats': review[4]
+        'movieName': review[2],
+        'dateTime': review[3].strftime("%Y-%m-%d"),
+        'reviewText': review[4].decode('utf-8'),
+        'reviewStats': review[5]
     }
 
 

@@ -35,6 +35,7 @@ def verify_review(review):
     assert review is not None
     assert review['id']
     assert review['movieId']
+    assert review['movieName']
     assert review['dateTime']
     assert review['reviewText']
     assert review['reviewStats']
