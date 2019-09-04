@@ -10,7 +10,7 @@ def client():
 
 
 def test_get_review(client):
-    response = client.get('/review/2')
+    response = client.get('/review/spidermanhomecoming2')
     assert response.status_code == 200
     review = json.loads(response.data)
     verify_review(review)

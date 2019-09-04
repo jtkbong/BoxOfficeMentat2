@@ -17,7 +17,7 @@ class Review(Resource):
         review_query.set_unique_results(True)
         review_query.set_return_columns(["Reviews.Id", "MovieId", "Movies.Name", "DateTime", "ReviewText", "ReviewStats"])
         review_query.add_inner_join('MovieId', 'Movies', 'Id')
-        review_query.add_where_clause(condition.Condition('Reviews.Id', '=', id))
+        review_query.add_where_clause(condition.Condition('Movies.Id', '=', id))
         cursor.execute(review_query.to_sql_query())
         review = cursor.fetchone()
 
