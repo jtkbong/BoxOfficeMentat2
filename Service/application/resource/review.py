@@ -26,6 +26,14 @@ class Review(Resource):
 
         return review_to_json(review)
 
+    def delete(self, id):
+        connection = sqlhelper.get_sql_conn()
+        cursor = connection.cursor()
+        sql = 'DELETE FROM boxofficementat.Reviews WHERE MovieId=%s'
+        cursor.execute(sql, id)
+        connection.commit()
+        connection.close()
+
 
 class Reviews(Resource):
 

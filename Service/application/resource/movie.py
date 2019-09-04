@@ -46,7 +46,13 @@ class Movie(Resource):
         cursor.execute(studio_name_query.to_sql_query())
         studio_name = cursor.fetchone()[0]
 
-        return movie_to_json(movie, weeks, studio_name)
+        has_review_query = query.Query()
+        has_review_query.set_table("Reviews")
+        has_review_query.add_where_clause(condition.Condition('MovieId', '=', id))
+        cursor.execute(has_review_query.to_sql_query())
+        has_review = False if cursor.fetchone() is None else True
+
+        return movie_to_json(movie, weeks, studio_name, has_review)
 
 
 class Genres(Resource):
@@ -157,7 +163,7 @@ class Movies(Resource):
             return {'movies': [movie_to_json(movie) for movie in movies]}
 
 
-def movie_to_json(movie, weeks=None, studio_name=None):
+def movie_to_json(movie, weeks=None, studio_name=None, has_review=False):
 
     movie_json = {
         'id': movie[0],
@@ -169,7 +175,8 @@ def movie_to_json(movie, weeks=None, studio_name=None):
         'genre': movie[6],
         'runTime': movie[7],
         'mpaaRating': movie[8],
-        'productionBudget': movie[9]
+        'productionBudget': movie[9],
+        'hasReview': has_review
     }
 
     if weeks is not None:

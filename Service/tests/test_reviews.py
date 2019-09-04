@@ -23,11 +23,19 @@ def test_get_reviews(client):
     verify_reviews(reviews)
 
 
-def test_post_reviews(client):
+def test_post_and_delete_review(client):
     response = client.post('/reviews', data=dict(
         movieId='avatar',
         reviewText='this movie made a lot of money'
     ))
+    assert response.status_code == 200
+
+    response = client.get('/review/avatar')
+    assert response.status_code == 200
+    review = json.loads(response.data)
+    verify_review(review)
+
+    response = client.delete('/review/avatar')
     assert response.status_code == 200
 
 

@@ -17,6 +17,14 @@ def test_get_movie(client):
     verify_movie(movie)
 
 
+def test_get_movie_with_review(client):
+    response = client.get('/movie/spidermanhomecoming2')
+    assert response.status_code == 200
+    movie = json.loads(response.data)
+    verify_movie(movie)
+    assert movie['hasReview'] is True
+
+
 def test_get_non_existent_movie(client):
     assert client.get('/movie/ironman4').status_code == 404
 
