@@ -22,7 +22,8 @@ class WeeklyNewMoviesScrapeTask(ScrapeTask):
                     studio_href = row.findAll('a')[1].get('href')
                     studio_name = parsingutil.get_studio_from_url(studio_href)
                     row_data = scrape_movie(href, movie_name, studio_name)
-                    data.append(row_data)
+                    if row_data is not None:
+                        data.append(row_data)
         date = ''
         headers = scrape_elements('h2', url, None)
         for header in headers:
