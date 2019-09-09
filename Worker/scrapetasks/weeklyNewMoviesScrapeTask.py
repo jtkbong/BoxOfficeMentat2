@@ -32,7 +32,8 @@ class WeeklyNewMoviesScrapeTask(ScrapeTask):
         file_name = create_data_file_path('WeeklyNewMovies_' + date + '.tsv')
         outfile = open(file_name, "w", newline='')
         writer = csv.writer(outfile, delimiter='\t')
-        writer.writerows(data)
+        if len(data) > 0:
+            writer.writerows(data)
         mark_data_file_complete(writer)
         self.files.append(file_name)
         self.scrapeSuccess = True
